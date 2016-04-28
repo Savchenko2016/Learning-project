@@ -9,15 +9,15 @@
     function isNumeric(n) {
       return !isNaN( parseFloat(n) ) && isFinite(n);
     }
-    
+
     do {
       var num1 = prompt("Введите первое число", "0");
     } while (!isNumeric(num1));
-    
+
     do {
       var num2 = prompt("Введите второе число", "0");
     } while (!isNumeric(num2));
-    
+
     var sum = +num1 + +num2;
     sum = sum.toFixed(10);
     alert("Сумма введенных чисел = " + +sum);

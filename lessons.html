@@ -1,0 +1,144 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Задачи</title>
+</head>
+<body>
+  <script>
+    //Задача "Почему 6.35.toFixed(1) == 6.3?"
+    alert( 6.35.toFixed(20) );
+
+    //Задача "Сложение цен"
+    var sum = 0.1 + 0.2;
+    alert( sum.toFixed(2) + "$");
+
+    //Задача "Бесконечный цикл по ошибке"
+    var i = 0;
+    while (i != 10) {
+      i += 0.2;
+      if (i > 9.5 && i < 10.5) {
+        alert(i);
+      }
+      if (i > 10.5) {
+	      break;
+      }
+    }
+
+    //Задача "Как получить дробную часть числа?"
+    function getDecimal(num) {
+      var str = num.toString();
+      var index = str.indexOf(".") == -1 ? 0 : str.indexOf(".");
+      return +str.slice(index);
+    }
+    alert( getDecimal(5.278) );
+
+    //Задача "Определите, пуст ли объект"
+    function isEmpty(obj) {
+      var f = true;;
+      for (var key in obj) {
+        f = false;
+        break;
+      }
+      return f;
+    }
+
+    var schedule = {};
+    alert( isEmpty(schedule) );
+
+    schedule["8:30"] = "подъём";
+    alert( isEmpty(schedule) );
+
+    //Задача "Сумма свойств"
+    "use strict";
+
+    var salaries = {
+      "Вася": 100,
+      "Петя": 300,
+      "Даша": 250
+    };
+
+    function sumSalaries(obj) {
+      var sum = 0;
+      for (var key in obj) {
+	      sum += obj[key];
+      }
+      return sum;
+    }
+
+    alert( sumSalaries(salaries) );
+
+    //Задача "Свойство с наибольшим значением"
+    var worker = "Нет сотрудников";
+    var max = 0;
+    for (var key in salaries) {
+      if (salaries[key] > max) {
+	      max = salaries[key];
+	      worker = key;
+      }
+    }
+    alert(worker);
+
+    //Задача "Получить последний элемент массива"
+    var goods = ["Яблоко", "Апельсин", "Груша", "Дыня"];
+    var item = goods[goods.length - 1];
+    //Задача "Добавить новый элемент в массив"
+    goods.push("Компьютер");
+
+    //Задача "Создание массива"
+    var styles = ["Джаз", "Блюз"];
+    styles[styles.length] = "Рок-н-Ролл";
+    if (styles.length - 2 >= 0) {
+      styles[styles.length - 2] = "Классика";
+    }
+    alert( styles.shift() );
+    styles.unshift("Рэп", "Регги");
+    alert(styles);
+
+    //Задача "Добавить класс в строку"
+    var obj = {
+      className: 'open menu'
+    }
+    addClass(obj, 'new');
+    addClass(obj, 'open');
+    addClass(obj, 'me');
+
+    function addClass(obj, className) {
+      var arr = obj.className.split(" ");
+      if (arr.indexOf(className) == -1) {
+        arr.push(className);
+      }
+      obj.className = arr.join(" ");
+    }
+
+    alert( "\"" + obj.className + "\"" );
+
+    //Задача "Перепишите цикл через map"
+    var arr = ["Есть", "жизнь", "на", "Марсе"];
+
+    var arrLength = arr.map(function(item) {
+      return item.length;
+    });
+
+    alert( arrLength );
+
+    //Задача "Проверка на аргумент-undefined"
+    function f(x) {
+      alert( arguments.length > 0 ? 1 : 0 );
+    }
+
+    f(undefined);
+    f();
+
+    //Задача "Сумма аргументов"
+    function sumArgs() {
+      var result = 0;
+      for (var i = 0; i < arguments.length; i = i + 1) {
+	      result += arguments[i];
+      }
+      return result;
+    }
+
+    alert( sumArgs(1,8,6,0,9) );
+  </script>
+</body>
