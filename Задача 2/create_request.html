@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Создание новой заявки</title>
+  <link rel="stylesheet" href="css/style.css" media="screen" type="text/css" />
+  <link rel="stylesheet" href="css/typography.css" media="screen" type="text/css" />
+</head>
+<body>
+  <section class="form create-request">
+    <h3>Создание новой заявки</h3>
+    <form action="javascript:void(0);" method="get">
+      <fieldset class="clearfix">
+        <label>Исполнитель<br>
+          <select name="performer" required>
+            <option>Савченко Владислав</option>
+          </select>
+        </label>
+        <label>Клиент<br>
+          <select name="client" required>
+            <option>Савченко Владислав</option>
+          </select>
+        </label>
+        <p><input type="text" name="summary" onBlur="if(this.value == '') this.value = 'Заголовок'" onFocus="if(this.value == 'Заголовок') this.value = ''" value="Заголовок" required></p>
+        <p>
+          <textarea name="description" rows="5" required onBlur="if(this.value == '') this.value = 'Описание'" onFocus="if(this.value == 'Описание') this.value = ''">Описание</textarea>
+        </p>
+        <label>Приоритет<br>
+          <select name="priority" required>
+            <option>LOW</option>
+            <option>MEDIUM</option>
+            <option>HIGH</option>
+          </select>
+        </label>
+        <label>Приблизительное время выполнения<br>
+          <input type="text" name="estimated" value="0" required onBlur="if(this.value == '') this.value = '0'" onFocus="if(this.value == '0') this.value = ''" required>
+        </label>
+        <label class="date">Deadline<br>
+          <select id = "days" name="days"></select><select id = "months" name="months"></select><select id = "years" name="years"></select>
+          <label>Часы<br>
+            <input type="number" name="hours" min="0" max="23" value="0" required>
+          </label>  
+          <label>Минуты<br>
+            <input type="number" name="minutes" min="0" max="59" value="0" required>
+          </label>
+          <label>Секунды<br>
+            <input type="number" name="seconds" min="0" max="59" value="0" required>
+	  </label>
+	  <script>
+	    function injectSelect(sel, rowsObject) {
+	      var opt, x;
+	      sel.innerHTML = "";
+	      for (x in rowsObject) {
+		opt = document.createElement("option");
+		opt.value = x;
+		opt.innerHTML = rowsObject[x];
+		sel.appendChild(opt);
+	      }
+	    }
+	    function makeNumbersObject(from, to) {
+	      var result = {}, x;
+	      if(from > to) {
+		var z = from;
+		from = to;
+		to = z;
+	      }
+	      for (x = from; x <= to; x++) {
+		result[x] = x;
+	      }
+	      return result;
+	    }
+	    injectSelect(document.getElementById("months"), {
+	      jan:"Январь", feb:"Февраль", mar:"Март", apr:"Апрель", 
+	      may:"Май", jun:"Июнь", jul:"Июль", avg:"Август", 
+	      sep:"Сентябрь", okt:"Октябрь", nov:"Ноябрь", dec:"Декабрь"
+	    });
+	    injectSelect(document.getElementById("years"), makeNumbersObject(2000, 2016));
+	    injectSelect(document.getElementById("days"), makeNumbersObject(1, 31));
+	  </script>
+        </label>
+        <p><input type="submit" value="СОЗДАТЬ" class="button"></p>
+      </fieldset>
+    </form>
+  </section>
+</body>
+</html>

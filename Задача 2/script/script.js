@@ -2,27 +2,17 @@ function isNumeric(n) {
   return !isNaN( parseFloat(n) ) && isFinite(n);
 }
 
-function extend(target, obj) {
-  if(obj === null || typeof(obj) != 'object') {
-    return target;
-  }
-  for(var key in obj) {
-    target[key] = extend(obj[key]);
-  }
-  return target;
-}
-
 function validate(content, type) {
   var VALIDATE_ARR = [
-    /^[а-яА-ЯёЁa-zA-Z0-9\s.?"',:;%@!_]+$/,  //простой текст
+    /^[а-яА-ЯёЁa-zA-Z0-9\s.?"',:;%@!()]+$/,  //простой текст
     /^[a-zA-Z][a-zA-Z0-9-_\.]{1,20}$/,  //логин
-    /^([a-z0-9_-]+\.)*[a-z0-9_-]+@[a-z0-9_-]+(\.[a-z0-9_-]+)*\.[a-z]{2,6}$/,  //email
+    /^([a-zA-Z0-9_-]+\.)*[a-zA-Z0-9_-]+@[a-z0-9_-]+(\.[a-z0-9_-]+)*\.[a-z]{2,6}$/,  //email
     /^[a-zA-Z][a-zA-Z0-9-_\.]{6,20}$/  //пароль
   ];
   var regexp = VALIDATE_ARR[type];
   return regexp.test(content);
-} 
-  
+}
+
 function User() {
   var id;
   var login;
@@ -31,11 +21,19 @@ function User() {
   var type;
   var requestsId = [];
   var TYPE_ARR = ['Исполнитель', 'Клиент', 'Администатор'];
+  this.attrs = ['name', 'id', 'login', 'password', 'email', 'type', 'requestsId'];
+
+  this.name = function() {
+    return this.constructor.name;
+  };
 
   this.id = function(userId) {
     if (!arguments.length) return id;
+    id = userId;
+  };
 
-    if ( isNumeric(userId) && userId >= 0 ) id = userId;
+  this.requestsId = function() {
+    return requestsId;
   };
 
   this.login = function(userLogin) {
@@ -81,12 +79,17 @@ function Comment() {
   var userId;
   var text;
   var type;
-  var TYPE_ARR = ['Вопрос', 'Комментарий'];
+  var date;
+  var TYPE_ARR = ['Вопрос', 'Комментарий', 'Created', 'Edited', 'Closed'];
+  this.attrs = ['name', 'id', 'userId', 'text', 'type'];
+
+  this.name = function() {
+    return this.constructor.name;
+  };
 
   this.id = function(commentId) {
     if (!arguments.length) return id;
-
-    if ( isNumeric(commentId) && commentId >= 0 ) id = commentId;
+    id = commentId;
   };
 
   this.userId = function(value) {
@@ -106,6 +109,12 @@ function Comment() {
 
     if ( TYPE_ARR.indexOf(commentType) != -1 ) type = commentType;
   };
+  
+  this.date = function(commentDate) {
+    if (!arguments.length) return date;
+
+    if ( commentDate instanceof Date ) date = commentDate;
+  };
 }
 
 function Request() {
@@ -116,15 +125,20 @@ function Request() {
   var summary;
   var priority;
   var estimated;
+  var created;
   var deadline;
   var commentsId = [];
   var ready;
   var PRIORITY_ARR = ['LOW', 'MEDIUM', 'HIGH'];
+  this.attrs = ['name', 'id', 'customerId', 'performerId', 'description', 'summary', 'priority', 'estimated', 'deadline', 'commentsId', 'ready'];
+
+  this.name = function() {
+    return this.constructor.name;
+  };
 
   this.id = function(requestId) {
     if (!arguments.length) return id;
-
-    if ( isNumeric(requestId) && requestId >= 0 ) id = requestId;
+    id = requestId;
   };
 
   this.customerId = function(value) {
@@ -137,6 +151,10 @@ function Request() {
     if (!arguments.length) return performerId;
 
     if ( isNumeric(value) && value >= 0 ) performerId = value;
+  };
+
+  this.commentsId = function() {
+    return commentsId;
   };
 
   this.addCommentId = function(id) {
@@ -176,10 +194,16 @@ function Request() {
     if ( isNumeric(requestEstimated) && requestEstimated >= 0 ) estimated = requestEstimated;
   };
 
+  this.created = function(requestCreated) {
+    if (!arguments.length) return created;
+
+    if ( requestCreated instanceof Date ) created = requestCreated;
+  };
+  
   this.deadline = function(requestDeadline) {
     if (!arguments.length) return deadline;
 
-    if ( requestDeadline instanceof Date) deadline = requestDeadline;
+    if ( requestDeadline instanceof Date ) deadline = requestDeadline;
   };
 
   this.ready = function(requestReady) {
@@ -187,4 +211,69 @@ function Request() {
 
     if ( isNumeric(requestReady) && requestReady >= 0 && requestReady <= 100) ready = requestReady;
   };
+}
+
+Math.uuid = (function() {
+  var CHARS = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'.split('');
+
+  return function (len, radix) {
+    var chars = CHARS, uuid = [], rnd = Math.random;
+    radix = radix || chars.length;
+
+    if (len) {
+      for (var i = 0; i < len; i++) uuid[i] = chars[0 | rnd()*radix];
+    } else {
+      var r;
+
+      uuid[8] = uuid[13] = uuid[18] = uuid[23] = '-';
+      uuid[14] = '4';
+
+      for (var k = 0; k < 36; k++) {
+        if (!uuid[k]) {
+          r = 0 | rnd()*16;
+          uuid[k] = chars[(k == 19) ? (r & 0x3) | 0x8 : r & 0xf];
+        }
+      }
+    }
+
+    return uuid.join('');
+  };
+})();
+
+if(typeof(Storage) !== 'undefined') {
+  var getAttributes = function(object) {
+    if (typeof(object) !== 'object') return null;
+    var result = {};
+    for (var i = 0; i < object.attrs.length; i++) {
+      var attr = object.attrs[i];
+      result[attr] = object[attr]();
+    }
+    return result;
+  };
+
+  var saveObject = function(object) {
+    if (typeof(object) !== 'object') return null;
+    var str = JSON.stringify(getAttributes(object));
+    localStorage[object.id()] = str;
+  };
+
+  var getObject = function(id) {
+    if (id in localStorage) {
+      var object = JSON.parse(localStorage[id]);
+      return init(object);
+    }
+    return null;
+  };
+
+  var init = function(object) {
+    if (typeof(object) !== 'object') return null;
+    var result = eval('new ' + object.name + '();');
+    delete object.name;
+    for (var i in object) {
+      result[i](object[i]);
+    }
+    return result;
+  };
+} else {
+  throw("Ошибка! У вас устаревший браузер!");
 }

@@ -1,17 +1,275 @@
-<!DOCTYPE HTML>
+<!DOCTYPE html>
 <html>
 <head>
-  <meta charset="utf-8">
-  <script src="script/script.js"></script>
+  <meta charset="UTF-8">
+  <title>Система учета заявок</title>
+  <link rel="stylesheet" href="css/style.css" media="screen" type="text/css" />
+  <link rel="stylesheet" href="css/typography.css" media="screen" type="text/css" />
 </head>
 <body>
-  <script>
-    user = new User();
-    comment = new Comment();
-    request = new Request();
-    user.password("qwertytrewq");
-    comment.text("Как правило, в HTML пишут только самые простые скрипты, а сложные выносят в отдельный файл. Браузер скачает его только первый раз и в дальнейшем, при правильной настройке сервера, будет брать из своего кеша. Благодаря этому один и тот же большой скрипт, содержащий, к примеру, библиотеку функций, может использоваться на разных страницах без полной перезагрузки с сервера.");
-    alert( comment.text() );
-    alert( user.password() );
-  </script>
+  <div class="authorisation">
+    <section class="form">
+      <h3>Авторизация</h3>
+      <form action="javascript:void(0);" method="get">
+	<fieldset class="clearfix">
+	  <p><input type="text" value="Логин" name="login" onBlur="if(this.value == '') this.value = 'Логин'" onFocus="if(this.value == 'Логин') this.value = ''" required></p>
+	  <p><input type="submit" value="ВОЙТИ" class="button"></p>
+	</fieldset>
+      </form>
+      <p class="left">Нет аккаунта?</p>
+      <p class="right"><a href="#">Регистрация клиента</a></p>
+      <p class="right"><a href="#">Регистрация исполнителя</a></p>
+    </section>
+  </div>
+  <div class="client_registration">
+    <section class="form">
+      <h3>Регистрация клиента</h3>
+      <form action="javascript:void(0);" method="get">
+	<fieldset class="clearfix">
+	  <p><input type="text" value="Логин" name="login" onBlur="if(this.value == '') this.value = 'Логин'" onFocus="if(this.value == 'Логин') this.value = ''" required></p>
+	  <p><input type="submit" value="ВОЙТИ" class="button"></p>
+	</fieldset>
+      </form>
+    </section>
+  </div>
+  <div class="create_comment">
+    <section class="form create-request">
+      <h3>Создание комментария</h3>
+      <form action="javascript:void(0);" method="get">
+	<fieldset class="clearfix">
+	  <label>Тип комментария<br>
+	    <select name="type" required>
+	      <option>Комментарий</option>
+	      <option>Вопрос</option>
+	      <option>Created</option>
+	      <option>Edited</option>
+	      <option>Closed</option>
+	    </select>
+	  </label>
+	  <p><textarea name="text" rows="10" required onBlur="if(this.value == '') this.value = 'Текст комментария'" onFocus="if(this.value == 'Текст комментария') this.value = ''">Текст комментария</textarea></p>
+	  <p><input type="submit" value="СОЗДАТЬ" class="button"></p>
+	</fieldset>
+      </form>
+    </section>
+  </div>
+  <div class="create_request">
+    <section class="form create-request">
+      <h3>Создание новой заявки</h3>
+      <form action="javascript:void(0);" method="get">
+	<fieldset class="clearfix">
+	  <label>Исполнитель<br>
+	    <select name="performer" required>
+	      <option>Савченко Владислав</option>
+	    </select>
+	  </label>
+	  <label>Клиент<br>
+	    <select name="client" required>
+	      <option>Савченко Владислав</option>
+	    </select>
+	  </label>
+	  <p><input type="text" name="summary" onBlur="if(this.value == '') this.value = 'Заголовок'" onFocus="if(this.value == 'Заголовок') this.value = ''" value="Заголовок" required></p>
+	  <p>
+	    <textarea name="description" rows="5" required onBlur="if(this.value == '') this.value = 'Описание'" onFocus="if(this.value == 'Описание') this.value = ''">Описание</textarea>
+	  </p>
+	  <label>Приоритет<br>
+	    <select name="priority" required>
+	      <option>LOW</option>
+	      <option>MEDIUM</option>
+	      <option>HIGH</option>
+	    </select>
+	  </label>
+	  <label>Приблизительное время выполнения<br>
+	    <input type="text" name="estimated" value="0" required onBlur="if(this.value == '') this.value = '0'" onFocus="if(this.value == '0') this.value = ''" required>
+	  </label>
+	  <label class="date">Deadline<br>
+	    <select class = "days" name="days"></select><select class = "months" name="months"></select><select class = "years" name="years"></select>
+	  </label>
+	  <label>Часы<br>
+	    <input type="number" name="hours" min="0" max="23" value="0" required>
+	  </label>
+	  <label>Минуты<br>
+	    <input type="number" name="minutes" min="0" max="59" value="0" required>
+	  </label>
+	  <label>Секунды<br>
+	    <input type="number" name="seconds" min="0" max="59" value="0" required>
+	  </label>
+	  <p><input type="submit" value="СОЗДАТЬ" class="button"></p>
+	</fieldset>
+      </form>
+    </section>
+  </div>
+  <div class="edit_request">
+    <section class="form create-request">
+      <h3>Редактирование заявки</h3>
+      <form action="javascript:void(0);" method="get">
+	<fieldset class="clearfix">
+	  <label>Приоритет<br>
+	    <select name="priority" required>
+	      <option>LOW</option>
+	      <option>MEDIUM</option>
+	      <option>HIGH</option>
+	    </select>
+	  </label>
+	  <div class="administrator">
+	    <label>Исполнитель<br>
+	      <select name="performer" required>
+		<option>Савченко Владислав</option>
+	      </select>
+	    </label>
+	    <label>Приблизительное время выполнения<br>
+	      <input type="text" name="estimated" value="0" required onBlur="if(this.value == '') this.value = '0'" onFocus="if(this.value == '0') this.value = ''" required>
+	    </label>
+	    <label class="date">Deadline<br>
+	      <select class = "days" name="days"></select><select class = "months" name="months"></select><select class = "years" name="years"></select>
+	    </label>
+	    <label>Часы<br>
+             <input type="number" name="hours" min="0" max="23" value="0" required>
+	    </label>
+	    <label>Минуты<br>
+	      <input type="number" name="minutes" min="0" max="59" value="0" required>
+	    </label>
+	    <label>Секунды<br>
+	      <input type="number" name="seconds" min="0" max="59" value="0" required>
+	    </label>
+	    <script>
+                function injectSelect(sel, rowsObject) {
+                  for (var i=0; i<sel.length; i++) {
+                    var opt, x;
+                    sel[i].innerHTML = "";
+                    for (x in rowsObject) {
+                      opt = document.createElement("option");
+                      opt.value = x;
+                      opt.innerHTML = rowsObject[x];
+                      sel[i].appendChild(opt);
+                    }
+                  }
+                }
+                function makeNumbersObject(from, to) {
+                  var result = {}, x;
+                  if(from > to) {
+                    var z = from;
+                    from = to;
+                    to = z;
+                  }
+                  for (x = from; x <= to; x++) {
+                    result[x] = x;
+                  }
+                  return result;
+                }
+                injectSelect(document.getElementsByClassName("months"), {
+                  jan:"Январь", feb:"Февраль", mar:"Март", apr:"Апрель",
+                  may:"Май", jun:"Июнь", jul:"Июль", avg:"Август",
+                  sep:"Сентябрь", okt:"Октябрь", nov:"Ноябрь", dec:"Декабрь"
+                });
+                injectSelect(document.getElementsByClassName("years"), makeNumbersObject(2000, 2016));
+                injectSelect(document.getElementsByClassName("days"), makeNumbersObject(1, 31));
+            </script>
+	  </div>
+	  <p><input type="submit" value="ИЗМЕНИТЬ" class="button"></p>
+	</fieldset>
+      </form>
+    </section>
+  <div>
+  <div class="list_request">
+    <header class="clearfix">
+      <h3>Список заявок</h3>
+      <a href="#" class="button">Создать заявку</a>
+      <div class="user-info">
+	<p>Приветствуем вас, <span>Савченко Владислав</span> </p>
+	<a href="#">Выйти</a>
+      </div>
+    </header>
+    <section class="requests">
+      <table>
+	<tr><th>Клиент</th><th>Исполнитель</th><th>Название</th><th>Приоритет</th><th>Предполагаемое время выполнения</th><th>Deadline</th><th>Готовность</th></tr>
+	<tr><td>Савченко</td><td>Савченко</td><td>Задача 6</td><td>MEDIUM</td><td>0</td><td>01.01.2016 00:00</td><td>50%</td></tr>
+      </table>
+    </section>
+  </div>
+  <div class="performer_registration">
+    <section class="form">
+      <h3>Регистрация исполнителя</h3>
+      <form action="javascript:void(0);" method="get">
+	<fieldset class="clearfix">
+	  <p><input type="text" value="Логин" name="login" onBlur="if(this.value == '') this.value = 'Логин'" onFocus="if(this.value == 'Логин') this.value = ''" required></p>
+	  <p><input type="submit" value="ВОЙТИ" class="button"></p>
+	</fieldset>
+      </form>
+    </section>
+  </div>
+  <div class="request_details">
+    <header class="clearfix">
+      <h3>Информация о заявке №123456789</h3>
+      <a href="#" class="button">Список заявок</a>
+      <a href="#" class="button">Добавить комментарий</a>
+      <div class="user-info">
+	<p>Приветствуем вас, <span>Савченко Владислав</span> </p>
+	<a href="#">Выйти</a>
+      </div>
+    </header>
+    <section class="request-detail">
+      <table>
+	<tr><th>Клиент</th><th>Исполнитель</th><th>Название</th><th>Приоритет</th><th>Предполагаемое время выполнения</th><th>Дата открытия</th><th>Deadline</th><th>Готовность</th></tr>
+	<tr><td>Савченко</td><td>Савченко</td><td>Задача 6</td><td>MEDIUM</td><td>0</td><td>01.01.2016 00:00</td><td>01.01.2016 00:00</td><td>50%</td></tr>
+      </table>
+      <article class="first">
+	<h3>Описание:</h3>
+	<div class="content">
+	  Материалы и задачи тут:<br>
+	  https://docs.google.com/document/d/1n754eO2Ac2OXqfVuzENq-bTOXIfw7meRCk9qMg4RvKQ/edit
+	</div>
+      </article>
+      <article>
+	<h3>Комментарии:</h3>
+	<div class="content">
+	<ul>
+	    <li>11/05/2016 09:31 - Комментарий  Владислав Савченко</li>
+	    <li>1. Ознакомился с материалами в документе и learn.javascript.ru<br>
+  2. Структура данных приложения:<br>
+    Пользователь (User):<br>
+      id: number - идентификатор пользователя<br>
+      login, password, email: string - логин, пароль и адрес электронной почты пользователя<br>
+      requestsId: Array - массив идентификаторов заявок<br>
+      TYPE_ARR: Array - массив типов пользователей<br>
+    Комментарий (Comment):<br>
+      id: number - идентификатор комментария<br>
+      userId: идентификатор пользователя, оставившего комментарий<br>
+      text, type: string - текст и тип комментария соответственно<br>
+      TYPE_ARR: Array - массив типов комментариев<br>
+    Заявка (Request):<br>
+      id: number - идентификатор заявки<br>
+      performerId: number - идентификатор исполнителя<br>
+      customerId: number - идентификатор клиента<br>
+      description: string - описание<br>
+      summary: string - заголовок<br>
+      priority: string - приоритет<br>
+      estimated: number - оставшееся время (в часах)<br>
+      deadline: Date - указанное клиентом время выполнения заявки<br>
+      commentsId: Array - массив идентификаторов комментариев<br>
+      ready: number - процент выполнения заявки<br>
+      PRIORITY_ARR - массив значений приоритетов заявки<br>
+  3. Ознакомился с работой localStorage<br>
+  4. Согласно составленной структуре создал классы для описанных сущностей в функциональном стиле, добавил объект Validation, проверяющий правильность свойств объектов классов с помощью регулярных выражений.
+            </li>
+	  </ul>
+	</div>
+      </article>
+    </section>
+  </div>
+  <div class="select_performer">
+    <section class="form">
+      <h3>Выбор исполнителя</h3>
+      <form action="javascript:void(0);" method="get">
+	<fieldset class="clearfix">
+	  <label>Исполнитель<br>
+	    <select name="priority" required>
+	      <option>Савченко</option>
+	    </select>
+	  </label>
+	  <p><input type="submit" value="Выбрать" class="button"></p>
+	</fieldset>
+      </form>
+    </section>
+  </div>
 </body>
+</html>

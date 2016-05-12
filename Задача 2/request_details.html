@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Информация о заявке</title>
+  <link rel="stylesheet" href="css/style.css" media="screen" type="text/css" />
+  <link rel="stylesheet" href="css/typography.css" media="screen" type="text/css" />
+</head>
+<body>
+  <header class="clearfix">
+    <h3>Информация о заявке №123456789</h3>
+    <a href="#" class="button">Список заявок</a>
+    <a href="#" class="button">Добавить комментарий</a>
+    <div class="user-info">
+      <p>Приветствуем вас, <span>Савченко Владислав</span> </p>
+      <a href="authorisation.html">Выйти</a>
+    </div>
+  </header>
+  <section class="request-detail">
+    <table>
+      <tr><th>Клиент</th><th>Исполнитель</th><th>Название</th><th>Приоритет</th><th>Предполагаемое время выполнения</th><th>Дата открытия</th><th>Deadline</th><th>Готовность</th></tr>
+      <tr><td>Савченко</td><td>Савченко</td><td>Занятие 6</td><td>MEDIUM</td><td>0</td><td>01.01.2016 00:00</td><td>01.01.2016 00:00</td><td>50%</td></tr>
+    </table>
+    <article class="first">
+      <h3>Описание:</h3>
+      <div class="content">
+	Материалы и задачи тут:<br>
+	https://docs.google.com/document/d/1n754eO2Ac2OXqfVuzENq-bTOXIfw7meRCk9qMg4RvKQ/edit
+      </div>
+    </article>
+    <article>
+      <h3>Комментарии:</h3>
+      <div class="content">
+      <ul>
+          <li>11/05/2016 09:31 - Комментарий  [84-Владислав Савченко]</li>
+          <li>1. Ознакомился с материалами в документе и learn.javascript.ru<br>
+2. Структура данных приложения:<br>
+   Пользователь (User):<br>
+     id: number - идентификатор пользователя<br>
+     login, password, email: string - логин, пароль и адрес электронной почты пользователя<br>
+     requestsId: Array - массив идентификаторов заявок<br>
+     TYPE_ARR: Array - массив типов пользователей<br>
+   Комментарий (Comment):<br>
+     id: number - идентификатор комментария<br>
+     userId: идентификатор пользователя, оставившего комментарий<br>
+     text, type: string - текст и тип комментария соответственно<br>
+     TYPE_ARR: Array - массив типов комментариев<br>
+   Заявка (Request):<br>
+     id: number - идентификатор заявки<br>
+     performerId: number - идентификатор исполнителя<br>
+     customerId: number - идентификатор клиента<br>
+     description: string - описание<br>
+     summary: string - заголовок<br>
+     priority: string - приоритет<br>
+     estimated: number - оставшееся время (в часах)<br>
+     deadline: Date - указанное клиентом время выполнения заявки<br>
+     commentsId: Array - массив идентификаторов комментариев<br>
+     ready: number - процент выполнения заявки<br>
+     PRIORITY_ARR - массив значений приоритетов заявки<br>
+3. Ознакомился с работой localStorage<br>
+4. Согласно составленной структуре создал классы для описанных сущностей в функциональном стиле, добавил объект Validation, проверяющий правильность свойств объектов классов с помощью регулярных выражений.</li>
+        </ul>
+      </div>
+    </article>
+  </section>
+</body>
+</html> 
