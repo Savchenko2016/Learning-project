@@ -5,10 +5,11 @@ function isNumeric(n) {
 function validate(content, type) {
   var VALIDATE_ARR = [
     /^[а-яА-ЯёЁa-zA-Z0-9\s.?"',:;%@!()]+$/,  //простой текст
-    /^[a-zA-Z][a-zA-Z0-9-_\.]{1,20}$/,  //логин
+    /^[a-zA-Z][a-zA-Z0-9-_\.]{6,20}$/,  //логин
     /^([a-zA-Z0-9_-]+\.)*[a-zA-Z0-9_-]+@[a-z0-9_-]+(\.[a-z0-9_-]+)*\.[a-z]{2,6}$/,  //email
     /^[a-zA-Z][a-zA-Z0-9-_\.]{6,20}$/  //пароль
   ];
+  if ( type == 4 ) return isNumeric(content);
   var regexp = VALIDATE_ARR[type];
   return regexp.test(content);
 }
@@ -20,7 +21,7 @@ function User() {
   var email;
   var type;
   var requestsId = [];
-  var TYPE_ARR = ['Исполнитель', 'Клиент', 'Администатор'];
+  var TYPE_ARR = ['Исполнитель', 'Клиент', 'Администратор'];
   this.attrs = ['name', 'id', 'login', 'password', 'email', 'type', 'requestsId'];
 
   this.name = function() {
@@ -81,7 +82,7 @@ function Comment() {
   var type;
   var date;
   var TYPE_ARR = ['Вопрос', 'Комментарий', 'Created', 'Edited', 'Closed'];
-  this.attrs = ['name', 'id', 'userId', 'text', 'type'];
+  this.attrs = ['name', 'id', 'userId', 'text', 'type', 'date'];
 
   this.name = function() {
     return this.constructor.name;
