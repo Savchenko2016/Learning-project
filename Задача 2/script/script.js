@@ -1,19 +1,26 @@
 function isNumeric(n) {
-  return !isNaN( parseFloat(n) ) && isFinite(n);
+  return !isNaN(parseFloat(n)) && isFinite(n);
 }
 
+var VALIDATE_ARR = [
+  /^[а-яА-ЯёЁa-zA-Z0-9\s.?"',:;%@!()]+$/, //простой текст
+  /^[a-zA-Z][a-zA-Z0-9-_\.]{2,20}$/, //логин
+  /^([a-zA-Z0-9_-]+\.)*[a-zA-Z0-9_-]+@[a-z0-9_-]+(\.[a-z0-9_-]+)*\.[a-z]{2,6}$/, //email
+  /^[a-zA-Z][a-zA-Z0-9-_\.]{6,20}$/, //пароль
+  /^[1-9][0-9]+$/ //int
+];
+
 function validate(content, type) {
-  var VALIDATE_ARR = [
-    /^[а-яА-ЯёЁa-zA-Z0-9\s.?"',:;%@!()]+$/,  //простой текст
-    /^[a-zA-Z][a-zA-Z0-9-_\.]{6,20}$/,  //логин
-    /^([a-zA-Z0-9_-]+\.)*[a-zA-Z0-9_-]+@[a-z0-9_-]+(\.[a-z0-9_-]+)*\.[a-z]{2,6}$/,  //email
-    /^[a-zA-Z][a-zA-Z0-9-_\.]{6,20}$/  //пароль
-  ];
-  if ( type == 4 ) return isNumeric(content);
+  if (type == 4)
+    return isNumeric(content);
   var regexp = VALIDATE_ARR[type];
   return regexp.test(content);
 }
-
+/**
+ * Конструктор пользователя системы управления заявками
+ * @constructor
+ * @returns {User}
+ */
 function User() {
   var id;
   var login;
@@ -24,57 +31,73 @@ function User() {
   var TYPE_ARR = ['Исполнитель', 'Клиент', 'Администратор'];
   this.attrs = ['name', 'id', 'login', 'password', 'email', 'type', 'requestsId'];
 
-  this.name = function() {
+  this.name = function () {
     return this.constructor.name;
   };
 
-  this.id = function(userId) {
-    if (!arguments.length) return id;
+  this.id = function (userId) {
+    if (!arguments.length)
+      return id;
     id = userId;
   };
 
-  this.requestsId = function() {
-    return requestsId;
+  this.requestsId = function (value) {
+    if (!arguments.length)
+      return requestsId;
+    requestsId = value;
   };
 
-  this.login = function(userLogin) {
-    if (!arguments.length) return login;
+  this.login = function (userLogin) {
+    if (!arguments.length)
+      return login;
 
-    if ( validate(userLogin, 1) ) login = userLogin;
+    if (validate(userLogin, 1))
+      login = userLogin;
   };
 
-  this.password = function(userPassword) {
-    if (!arguments.length) return password;
+  this.password = function (userPassword) {
+    if (!arguments.length)
+      return password;
 
-    if ( validate(userPassword, 3) ) password = userPassword;
+    if (validate(userPassword, 3))
+      password = userPassword;
   };
 
-  this.email = function(userEmail) {
-    if (!arguments.length) return email;
+  this.email = function (userEmail) {
+    if (!arguments.length)
+      return email;
 
-    if ( validate(userEmail, 2) ) email = userEmail;
+    if (validate(userEmail, 2))
+      email = userEmail;
   };
 
-  this.type = function(userType) {
-    if (!arguments.length) return type;
+  this.type = function (userType) {
+    if (!arguments.length)
+      return type;
 
-    if ( TYPE_ARR.indexOf(userType) != -1 ) type = userType;
+    if (TYPE_ARR.indexOf(userType) != -1)
+      type = userType;
   };
 
-  this.addRequestId = function(id) {
-    if (!arguments.length) return false;
-    if ( isNumeric(id) && id >= 0 ) {
-      requestsId.push(id);
-      return true;
-    }
+  this.addRequestId = function (id) {
+    if (!arguments.length)
+      return false;
+    requestsId.push(id);
+    return true;
   };
 
-  this.getRequestId = function(index) {
-    if ( index >= requestsId.length ) return null;
+  this.getRequestId = function (index) {
+    if (index >= requestsId.length)
+      return null;
     return requestId[index];
   };
 }
 
+/**
+ * Конструктор комментария
+ * @constructor
+ * @returns {Comment}
+ */
 function Comment() {
   var id;
   var userId;
@@ -84,40 +107,52 @@ function Comment() {
   var TYPE_ARR = ['Вопрос', 'Комментарий', 'Created', 'Edited', 'Closed'];
   this.attrs = ['name', 'id', 'userId', 'text', 'type', 'date'];
 
-  this.name = function() {
+  this.name = function () {
     return this.constructor.name;
   };
 
-  this.id = function(commentId) {
-    if (!arguments.length) return id;
+  this.id = function (commentId) {
+    if (!arguments.length)
+      return id;
     id = commentId;
   };
 
-  this.userId = function(value) {
-    if (!arguments.length) return userId;
+  this.userId = function (value) {
+    if (!arguments.length)
+      return userId;
 
-    if ( isNumeric(value) && value >= 0 ) userId = value;
+    userId = value;
   };
 
-  this.text = function(commentText) {
-    if (!arguments.length) return text;
+  this.text = function (commentText) {
+    if (!arguments.length)
+      return text;
 
-    if ( validate(commentText, 0) ) text = commentText;
+    if (validate(commentText, 0))
+      text = commentText;
   };
 
-  this.type = function(commentType) {
-    if (!arguments.length) return type;
+  this.type = function (commentType) {
+    if (!arguments.length)
+      return type;
 
-    if ( TYPE_ARR.indexOf(commentType) != -1 ) type = commentType;
+    if (TYPE_ARR.indexOf(commentType) != -1)
+      type = commentType;
   };
-  
-  this.date = function(commentDate) {
-    if (!arguments.length) return date;
 
-    if ( commentDate instanceof Date ) date = commentDate;
+  this.date = function (commentDate) {
+    if (!arguments.length)
+      return date;
+
+    date = commentDate;
   };
 }
 
+/**
+ * Конструктор заявки
+ * @constructor
+ * @returns {Request}
+ */
 function Request() {
   var id;
   var customerId;
@@ -131,90 +166,108 @@ function Request() {
   var commentsId = [];
   var ready;
   var PRIORITY_ARR = ['LOW', 'MEDIUM', 'HIGH'];
-  this.attrs = ['name', 'id', 'customerId', 'performerId', 'description', 'summary', 'priority', 'estimated', 'deadline', 'commentsId', 'ready'];
+  this.attrs = ['name', 'id', 'customerId', 'performerId', 'description', 'summary', 'priority', 'estimated', 'deadline', 'commentsId', 'ready', 'created'];
 
-  this.name = function() {
+  this.name = function () {
     return this.constructor.name;
   };
 
-  this.id = function(requestId) {
-    if (!arguments.length) return id;
+  this.id = function (requestId) {
+    if (!arguments.length)
+      return id;
     id = requestId;
   };
 
-  this.customerId = function(value) {
-    if (!arguments.length) return customerId;
+  this.customerId = function (value) {
+    if (!arguments.length)
+      return customerId;
 
-    if ( isNumeric(value) && value >= 0 ) customerId = value;
+    customerId = value;
   };
 
-  this.performerId = function(value) {
-    if (!arguments.length) return performerId;
+  this.performerId = function (value) {
+    if (!arguments.length)
+      return performerId;
 
-    if ( isNumeric(value) && value >= 0 ) performerId = value;
+    performerId = value;
   };
 
-  this.commentsId = function() {
-    return commentsId;
+  this.commentsId = function (value) {
+    if (!arguments.length)
+      return commentsId;
+
+    commentsId = value;
   };
 
-  this.addCommentId = function(id) {
-    if (!arguments.length) return false;
-    if ( isNumeric(id) && id >= 0 ) {
-      commentsId.push(id);
-      return true;
-    }
+  this.addCommentId = function (id) {
+    if (!arguments.length)
+      return false;
+    commentsId.push(id);
+    return true;
   };
 
-  this.getCommentId = function(index) {
-    if ( index >= commentsId.length ) return null;
+  this.getCommentId = function (index) {
+    if (index >= commentsId.length)
+      return null;
     return commentsId[index];
   };
 
-  this.description = function(requestDescription) {
-    if (!arguments.length) return description;
+  this.description = function (requestDescription) {
+    if (!arguments.length)
+      return description;
 
-    if ( validate(requestDescription, 0) ) description = requestDescription;
+    if (validate(requestDescription, 0))
+      description = requestDescription;
   };
 
-  this.summary = function(requestSummary) {
-    if (!arguments.length) return summary;
+  this.summary = function (requestSummary) {
+    if (!arguments.length)
+      return summary;
 
-    if ( validate(requestSummary, 0) ) summary = requestSummary;
+    if (validate(requestSummary, 0))
+      summary = requestSummary;
   };
 
-  this.priority = function(requestPriority) {
-    if (!arguments.length) return priority;
+  this.priority = function (requestPriority) {
+    if (!arguments.length)
+      return priority;
 
-    if ( PRIORITY_ARR.indexOf(requestPriority) != -1 ) priority = requestPriority;
+    if (PRIORITY_ARR.indexOf(requestPriority) != -1)
+      priority = requestPriority;
   };
 
-  this.estimated = function(requestEstimated) {
-    if (!arguments.length) return estimated;
+  this.estimated = function (requestEstimated) {
+    if (!arguments.length)
+      return estimated;
 
-    if ( isNumeric(requestEstimated) && requestEstimated >= 0 ) estimated = requestEstimated;
+    if (isNumeric(requestEstimated) && requestEstimated >= 0)
+      estimated = requestEstimated;
   };
 
-  this.created = function(requestCreated) {
-    if (!arguments.length) return created;
+  this.created = function (requestCreated) {
+    if (!arguments.length)
+      return created;
 
-    if ( requestCreated instanceof Date ) created = requestCreated;
-  };
-  
-  this.deadline = function(requestDeadline) {
-    if (!arguments.length) return deadline;
-
-    if ( requestDeadline instanceof Date ) deadline = requestDeadline;
+    created = requestCreated;
   };
 
-  this.ready = function(requestReady) {
-    if (!arguments.length) return ready;
+  this.deadline = function (requestDeadline) {
+    if (!arguments.length)
+      return deadline;
 
-    if ( isNumeric(requestReady) && requestReady >= 0 && requestReady <= 100) ready = requestReady;
+    deadline = requestDeadline;
+  };
+
+  this.ready = function (requestReady) {
+    if (!arguments.length)
+      return ready;
+
+    if (isNumeric(requestReady) && requestReady >= 0 && requestReady <= 100)
+      ready = requestReady;
   };
 }
 
-Math.uuid = (function() {
+Math.uuid = (function () {
   var CHARS = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'.split('');
 
   return function (len, radix) {
@@ -222,7 +275,8 @@ Math.uuid = (function() {
     radix = radix || chars.length;
 
     if (len) {
-      for (var i = 0; i < len; i++) uuid[i] = chars[0 | rnd()*radix];
+      for (var i = 0; i < len; i++)
+        uuid[i] = chars[0 | rnd() * radix];
     } else {
       var r;
 
@@ -231,7 +285,7 @@ Math.uuid = (function() {
 
       for (var k = 0; k < 36; k++) {
         if (!uuid[k]) {
-          r = 0 | rnd()*16;
+          r = 0 | rnd() * 16;
           uuid[k] = chars[(k == 19) ? (r & 0x3) | 0x8 : r & 0xf];
         }
       }
@@ -241,9 +295,10 @@ Math.uuid = (function() {
   };
 })();
 
-if(typeof(Storage) !== 'undefined') {
-  var getAttributes = function(object) {
-    if (typeof(object) !== 'object') return null;
+if (typeof (Storage) !== 'undefined') {
+  var getAttributes = function (object) {
+    if (typeof (object) !== 'object')
+      return null;
     var result = {};
     for (var i = 0; i < object.attrs.length; i++) {
       var attr = object.attrs[i];
@@ -252,13 +307,14 @@ if(typeof(Storage) !== 'undefined') {
     return result;
   };
 
-  var saveObject = function(object) {
-    if (typeof(object) !== 'object') return null;
+  var saveObject = function (object) {
+    if (typeof (object) !== 'object')
+      return null;
     var str = JSON.stringify(getAttributes(object));
     localStorage[object.id()] = str;
   };
 
-  var getObject = function(id) {
+  var getObject = function (id) {
     if (id in localStorage) {
       var object = JSON.parse(localStorage[id]);
       return init(object);
@@ -266,8 +322,9 @@ if(typeof(Storage) !== 'undefined') {
     return null;
   };
 
-  var init = function(object) {
-    if (typeof(object) !== 'object') return null;
+  var init = function (object) {
+    if (typeof (object) !== 'object')
+      return null;
     var result = eval('new ' + object.name + '();');
     delete object.name;
     for (var i in object) {

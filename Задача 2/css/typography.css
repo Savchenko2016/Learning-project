@@ -42,7 +42,7 @@ h3 {
 .form form textarea {
   color: #606468;
   font-family: 'Open Sans', Arial, sans-serif;
-  font-size: 14px;  
+  font-size: 14px;
 }
 
 .form form select {
@@ -51,6 +51,10 @@ h3 {
 
 .form form input:focus {
   color: #fff;
+}
+
+.form form input[type="datetime-local"]:focus {
+  color: #000;
 }
 
 .button {

@@ -4,7 +4,9 @@
   <meta charset="UTF-8">
   <title>Система учета заявок</title>
   <script src="script/script.js"></script>
-  <script src="script/script1.js"></script>
+  <script src="script/functions.js"></script>
+  <script src="script/events.js"></script>
+  <script src="script/main.js"></script>
   <link rel="stylesheet" href="css/style.css" media="screen" type="text/css" />
   <link rel="stylesheet" href="css/typography.css" media="screen" type="text/css" />
 </head>
@@ -14,7 +16,7 @@
       <h3>Авторизация</h3>
       <form action="javascript:void(0);" method="get">
 	<fieldset class="clearfix">
-	  <p><input type="text" value="Логин" name="login" onBlur="if(this.value == '') this.value = 'Логин'" onFocus="if(this.value == 'Логин') this.value = ''" required></p>
+	  <p><input type="text" placeholder="Логин" name="login" required></p>
 	  <p><input type="submit" value="ВОЙТИ" class="button"></p>
 	</fieldset>
       </form>
@@ -28,7 +30,7 @@
       <h3>Регистрация клиента</h3>
       <form action="javascript:void(0);" method="get">
 	<fieldset class="clearfix">
-	  <p><input type="text" value="Логин" name="login" onBlur="if(this.value == '') this.value = 'Логин'" onFocus="if(this.value == 'Логин') this.value = ''" required></p>
+	  <p><input type="text" placeholder="Логин" name="login" required></p>
 	  <p><input type="submit" value="ВОЙТИ" class="button"></p>
 	</fieldset>
       </form>
@@ -43,12 +45,12 @@
 	    <select name="type" required>
 	      <option>Комментарий</option>
 	      <option>Вопрос</option>
-	      <option>Created</option>
-	      <option>Edited</option>
+	      <option class="not-performer">Created</option>
+	      <option class="not-performer">Edited</option>
 	      <option>Closed</option>
 	    </select>
 	  </label>
-	  <p><textarea name="text" rows="10" required onBlur="if(this.value == '') this.value = 'Текст комментария'" onFocus="if(this.value == 'Текст комментария') this.value = ''">Текст комментария</textarea></p>
+	  <p><textarea name="text" rows="10" required placeholder="Текст комментария"></textarea></p>
 	  <p><input type="submit" value="СОЗДАТЬ" class="button"></p>
 	</fieldset>
       </form>
@@ -63,13 +65,15 @@
 	    <select name="performer" required>
 	    </select>
 	  </label>
+	  <!--
 	  <label>Клиент<br>
 	    <select name="client" required>
 	    </select>
 	  </label>
-	  <p><input type="text" name="summary" onBlur="if(this.value == '') this.value = 'Заголовок'" onFocus="if(this.value == 'Заголовок') this.value = ''" value="Заголовок" required></p>
+	  -->
+	  <p><input type="text" name="summary" placeholder="Заголовок" required></p>
 	  <p>
-	    <textarea name="description" rows="5" required onBlur="if(this.value == '') this.value = 'Описание'" onFocus="if(this.value == 'Описание') this.value = ''">Описание</textarea>
+	    <textarea name="description" rows="5" required placeholder="Описание"></textarea>
 	  </p>
 	  <label>Приоритет<br>
 	    <select name="priority" required>
@@ -79,20 +83,22 @@
 	    </select>
 	  </label>
 	  <label>Приблизительное время выполнения<br>
-	    <input type="text" name="estimated" value="0" required onBlur="if(this.value == '') this.value = '0'" onFocus="if(this.value == '0') this.value = ''" required>
+	    <input type="text" name="estimated" palceholder="0" required>
 	  </label>
 	  <label class="date">Deadline<br>
-	    <select class = "days" name="days"></select><select class = "months" name="months"></select><select class = "years" name="years"></select>
+	      <select class = "days" name="days"></select><select class = "months" name="months"></select><select class = "years" name="years"></select>
 	  </label>
-	  <label>Часы<br>
-	    <input type="number" name="hours" min="0" max="23" value="0" required>
-	  </label>
-	  <label>Минуты<br>
-	    <input type="number" name="minutes" min="0" max="59" value="0" required>
-	  </label>
-	  <label>Секунды<br>
-	    <input type="number" name="seconds" min="0" max="59" value="0" required>
-	  </label>
+	  <div class="clearfix">
+  	    <label class="col">Часы<br>
+               <input type="number" name="hours" min="0" max="23" value="0" required>
+  	    </label>
+  	    <label class="col">Минуты<br>
+  	      <input type="number" name="minutes" min="0" max="59" value="0" required>
+  	    </label>
+  	    <label class="col">Секунды<br>
+  	      <input type="number" name="seconds" min="0" max="59" value="0" required>
+  	    </label>
+          </div>
 	  <p><input type="submit" value="СОЗДАТЬ" class="button"></p>
 	</fieldset>
       </form>
@@ -101,70 +107,36 @@
   <div id="edit_request">
     <section class="form create-request">
       <h3>Редактирование заявки</h3>
-      <form action="javascript:void(0);" method="get">
+      <form action="javascript:void(0);" method="get" novalidate>
 	<fieldset class="clearfix">
-	  <label>Приоритет<br>
-	    <select name="priority" required>
-	      <option>LOW</option>
-	      <option>MEDIUM</option>
-	      <option>HIGH</option>
-	    </select>
-	  </label>
-	  <div class="administrator">
+	  <div id="administrator-edit">
 	    <label>Исполнитель<br>
 	      <select name="performer" required>
-		<option>Савченко Владислав</option>
 	      </select>
 	    </label>
 	    <label>Приблизительное время выполнения<br>
-	      <input type="text" name="estimated" value="0" required onBlur="if(this.value == '') this.value = '0'" onFocus="if(this.value == '0') this.value = ''" required>
+	      <input type="text" name="estimated" placeholder="0" required>
 	    </label>
 	    <label class="date">Deadline<br>
 	      <select class = "days" name="days"></select><select class = "months" name="months"></select><select class = "years" name="years"></select>
 	    </label>
-	    <label>Часы<br>
-             <input type="number" name="hours" min="0" max="23" value="0" required>
-	    </label>
-	    <label>Минуты<br>
-	      <input type="number" name="minutes" min="0" max="59" value="0" required>
-	    </label>
-	    <label>Секунды<br>
-	      <input type="number" name="seconds" min="0" max="59" value="0" required>
-	    </label>
-	    <script>
-                function injectSelect(sel, rowsObject) {
-                  for (var i=0; i<sel.length; i++) {
-                    var opt, x;
-                    sel[i].innerHTML = "";
-                    for (x in rowsObject) {
-                      opt = document.createElement("option");
-                      opt.value = x;
-                      opt.innerHTML = rowsObject[x];
-                      sel[i].appendChild(opt);
-                    }
-                  }
-                }
-                function makeNumbersObject(from, to) {
-                  var result = {}, x;
-                  if(from > to) {
-                    var z = from;
-                    from = to;
-                    to = z;
-                  }
-                  for (x = from; x <= to; x++) {
-                    result[x] = x;
-                  }
-                  return result;
-                }
-                injectSelect(document.getElementsByClassName("months"), {
-                  jan:"Январь", feb:"Февраль", mar:"Март", apr:"Апрель",
-                  may:"Май", jun:"Июнь", jul:"Июль", avg:"Август",
-                  sep:"Сентябрь", okt:"Октябрь", nov:"Ноябрь", dec:"Декабрь"
-                });
-                injectSelect(document.getElementsByClassName("years"), makeNumbersObject(2000, 2016));
-                injectSelect(document.getElementsByClassName("days"), makeNumbersObject(1, 31));
-            </script>
-	  </div>
+            <div class="clearfix">
+	      <label class="col">Часы<br>
+		<input type="number" name="hours" min="0" max="23" value="0" required>
+	      </label>
+	      <label class="col">Минуты<br>
+		<input type="number" name="minutes" min="0" max="59" value="0" required>
+	      </label>
+	      <label class="col">Секунды<br>
+		<input type="number" name="seconds" min="0" max="59" value="0" required>
+	      </label>
+            </div>
+	    </div>
+        <div id="performer-edit">
+            <label>Готовность<br />
+                <input type="number" name="ready" min="0" max="100" />
+            </label>
+        </div>
 	  <p><input type="submit" value="ИЗМЕНИТЬ" class="button"></p>
 	</fieldset>
       </form>
@@ -174,6 +146,8 @@
     <header class="clearfix">
       <h3>Список заявок</h3>
       <a href="#" class="button" id="create-request">Создать заявку</a>
+      <a href="#" class="button" id="back-authorisation">Выйти</a>
+      <a href="#" class="button" id="create-performer">Создать исполнителя</a>
       <div class="user-info">
 	<p>Приветствуем вас, <span class="user"></span> </p>
       </div>
@@ -189,8 +163,19 @@
       <h3>Регистрация исполнителя</h3>
       <form action="javascript:void(0);" method="get">
 	<fieldset class="clearfix">
-	  <p><input type="text" value="Логин" name="login" onBlur="if(this.value == '') this.value = 'Логин'" onFocus="if(this.value == 'Логин') this.value = ''" required></p>
+	  <p><input type="text" placeholder="Логин" name="login" required></p>
 	  <p><input type="submit" value="ВОЙТИ" class="button"></p>
+	</fieldset>
+      </form>
+    </section>
+  </div>
+  <div id="performer_creation">
+    <section class="form">
+      <h3>Создание исполнителя</h3>
+      <form action="javascript:void(0);" method="get">
+	<fieldset class="clearfix">
+	  <p><input type="text" placeholder="Логин" name="login" required></p>
+	  <p><input type="submit" value="СОЗДАТЬ" class="button"></p>
 	</fieldset>
       </form>
     </section>
@@ -202,7 +187,7 @@
 	<fieldset class="clearfix">
 	  <label>Исполнитель<br>
 	    <select name="priority" required>
-	      <option>Савченко</option>
+	      <option></option>
 	    </select>
 	  </label>
 	  <p><input type="submit" value="Выбрать" class="button"></p>
@@ -213,9 +198,9 @@
   <div id="request_details">
   <header class="clearfix">
     <h3>Информация о заявке <span id="request"></span></h3>
-    <a href="#" class="button">Список заявок</a>
-    <a href="#" class="button">Добавить комментарий</a>
-    <a href="#" class="button">Редактировать заявку</a>
+    <a href="#" class="button" id="list-requests">Список заявок</a>
+    <a href="#" class="button" id="add-comment">Добавить комментарий</a>
+    <a href="#" class="button" id="edit-request">Редактировать заявку</a>
     <div class="user-info">
       <p>Приветствуем вас, <span class="user"><span> </p>
     </div>
@@ -227,8 +212,6 @@
     <article class="first">
       <h3>Описание:</h3>
       <div class="content" id="description">
-	Материалы и задачи тут:<br>
-	https://docs.google.com/document/d/1n754eO2Ac2OXqfVuzENq-bTOXIfw7meRCk9qMg4RvKQ/edit
       </div>
     </article>
     <article>

@@ -7,7 +7,7 @@ body {
   margin: 0 auto !important;
 }
 
-input, textarea {
+input:not([name="datetime-local"]), textarea {
   border: none;
   padding: 0;
   appearance: none;
@@ -31,7 +31,7 @@ input, textarea {
   width: 400px;
 }
 
-.form form input {
+.form form input:not([name="datetime-local"]) {
   height: 50px;
   outline:none;
 }
@@ -200,8 +200,12 @@ article.first .content {
   padding: 20px;
 }
 
+article:not(:first-child) {
+  margin-top: 20px;
+}
+
 article h3 {
-  margin: 1em 0;
+  padding: 20px;
 }
 
 article .content ul li:first-child {
@@ -217,4 +221,17 @@ article .content ul li {
   margin: 5px auto;
   background-color: #3b4148;
   width: 200px;
+}
+
+.col {
+  float:left;
+  width: 130px!important;
+}
+
+.col input {
+  width: 110px!important;
+}
+
+.col:not(:first-child) {
+  padding-left: 5px;
 }
