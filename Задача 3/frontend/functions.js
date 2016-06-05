@@ -1,25 +1,38 @@
-function hide() {
-  authorisation.style.display = 'none';
-  client_registration.style.display = 'none';
-  create_comment.style.display = 'none';
-  create_request.style.display = 'none';
-  edit_request.style.display = 'none';
-  list_request.style.display = 'none';
-  performer_registration.style.display = 'none';
-  select_performer.style.display = 'none';
-  request_details.style.display = 'none';
-  performer_creation.style.display = 'none';
-}
+var exports = module.exports = {};
 
-function createSimpleElement(element, tag) {
+exports.authorisation = null;
+exports.client_registration = null;
+exports.create_comment = null;
+exports.create_request = null;
+exports.edit_request = null;
+exports.list_request = null;
+exports.performer_registration = null;
+exports.select_performer = null;
+exports.request_details = null;
+exports.performer_creation = null;
+
+exports.hide = function() {
+  exports.authorisation.style.display = 'none';
+  exports.client_registration.style.display = 'none';
+  exports.create_comment.style.display = 'none';
+  exports.create_request.style.display = 'none';
+  exports.edit_request.style.display = 'none';
+  exports.list_request.style.display = 'none';
+  exports.performer_registration.style.display = 'none';
+  exports.select_performer.style.display = 'none';
+  exports.request_details.style.display = 'none';
+  exports.performer_creation.style.display = 'none';
+};
+
+exports.createSimpleElement = function(element, tag) {
   for (var i = 2; i < arguments.length; i++) {
     var elem = document.createElement(tag);
     elem.innerHTML = arguments[i];
     element.appendChild(elem);
   }
-}
+};
 
-function displayError(text, f) {
+exports.displayError = function(text, f) {
   var error = document.createElement('div');
   error.className = 'error';
   error.innerHTML = text;
@@ -30,16 +43,16 @@ function displayError(text, f) {
     document.body.removeChild(error);
   }, 2000);
   return error;
-}
+};
 
-function removeElements(element, tag, index) {
+exports.removeElements = function(element, tag, index) {
   var elements = element.querySelectorAll(tag);
   for (var i = index; i < elements.length; i++) {
     element.removeChild(elements[i]);
   }
-}
+};
 
-function injectSelect(sel, rowsObject) {
+exports.injectSelect = function(sel, rowsObject) {
   for (var i = 0; i < sel.length; i++) {
     var opt, x;
     sel[i].innerHTML = "";
@@ -59,8 +72,8 @@ function injectSelect(sel, rowsObject) {
       }
     }
   }
-}
-function makeNumbersObject(from, to) {
+};
+exports.makeNumbersObject = function(from, to) {
   var result = {}, x;
   if (from > to) {
     var z = from;
@@ -71,4 +84,4 @@ function makeNumbersObject(from, to) {
     result[x] = x;
   }
   return result;
-}
+};

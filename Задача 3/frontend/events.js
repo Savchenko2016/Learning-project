@@ -1,19 +1,13 @@
-var authorisation;
-var client_registration;
-var create_comment;
-var create_request;
-var edit_request;
-var list_request;
-var performer_registration;
-var select_performer;
-var request_details;
-var performer_creation;
+var exports = module.exports = {};
 
-var user = null;
-var request = null;
-var comment = null;
+var script = require('script.js');
+var functions = require('./functions.js');
 
-var options = {
+exports.user = null;
+exports.request = null;
+exports.comment = null;
+
+exports.options = {
   year: 'numeric',
   month: 'long',
   day: 'numeric',
@@ -27,19 +21,19 @@ var options = {
  * @param {object} event - Объект события
  * @returns {undefined}
  */
-function creation(event) {
+exports.creation = function(event) {
   event = event || window.event;
-  var login = performer_creation.querySelector('input[name="login"]').value;
-  if (validate(login, 1) && !(login in localStorage)) {
-    var performer = new User();
+  var login = functions.performer_creation.querySelector('input[name="login"]').value;
+  if (script.validate(login, 1) && !(login in localStorage)) {
+    var performer = new script.User();
     performer.id(login);
     performer.login(login);
     performer.type('Исполнитель');
-    saveObject(performer);
-    hide();
-    list_request.style.display = 'block';
+    script.saveObject(performer);
+    functions.hide();
+    functions.list_request.style.display = 'block';
   } else {
-    displayError('Ошибка!');
+    functions.displayError('Ошибка!');
   }
   if (event.preventDefault) {
     event.preventDefault();
@@ -47,90 +41,90 @@ function creation(event) {
     event.returnValue = false;
   }
 
-}
+};
 
 /**
  * Функция регистрации исполнителя
  * @param {object} event - Объект события
  * @returns {undefined}
  */
-function registration(event) {
+exports.registration = function(event) {
   event = event || window.event;
-  var login = performer_registration.querySelector('input[name="login"]').value;
-  if (validate(login, 1) && !(login in localStorage)) {
-    var performer = new User();
+  var login = functions.performer_registration.querySelector('input[name="login"]').value;
+  if (script.validate(login, 1) && !(login in localStorage)) {
+    var performer = new script.User();
     performer.id(login);
     performer.login(login);
     performer.type('Исполнитель');
-    saveObject(performer);
-    hide();
-    authorisation.style.display = 'block';
+    script.saveObject(performer);
+    functions.hide();
+    functions.authorisation.style.display = 'block';
   } else {
-    displayError('Ошибка!');
+    functions.displayError('Ошибка!');
   }
   if (event.preventDefault) {
     event.preventDefault();
   } else {
     event.returnValue = false;
   }
-}
+};
 
 /**
  * Функция регистрации клиента
  * @param {object} event - Объект события
  * @returns {undefined}
  */
-function registration1(event) {
+exports.registration1 = function(event) {
   event = event || window.event;
-  var login = client_registration.querySelector('input[name="login"]').value;
-  if (validate(login, 1) && !(login in localStorage)) {
-    var customer = new User();
+  var login = functions.client_registration.querySelector('input[name="login"]').value;
+  if (script.validate(login, 1) && !(login in localStorage)) {
+    var customer = new script.User();
     customer.id(login);
     customer.login(login);
     customer.type('Клиент');
-    saveObject(customer);
-    hide();
-    authorisation.style.display = 'block';
+    script.saveObject(customer);
+    functions.hide();
+    functions.authorisation.style.display = 'block';
   } else {
-    displayError('Ошибка!');
+    functions.displayError('Ошибка!');
   }
   if (event.preventDefault) {
     event.preventDefault();
   } else {
     event.returnValue = false;
   }
-}
+};
 /**
  * Функция отображения списка заявок
  * @param {object} event - Объект события
  * @returns {Boolean}
  */
-function showRequests(event) {
+exports.showRequests = function(event) {
   event = event || window.event;
 
-  hide();
-  list_request.style.display = 'block';
-  if (user.type() !== 'Администратор') {
+  functions.hide();
+  functions.list_request.style.display = 'block';
+  if (exports.user.type() !== 'Администратор') {
     document.getElementById('create-performer').style.display = 'none';
   } else {
     document.getElementById('create-performer').style.display = 'block';
   }
-  var login = user.login();
+  var login = exports.user.login();
   var span = document.getElementsByClassName('user');
   for (var i = 0; i < span.length; i++) {
     span[i].innerHTML = login;
   }
 
-  if (user.type() == 'Исполнитель') {
+  if (exports.user.type() == 'Исполнитель') {
     document.getElementById('create-request').style.display = 'none';
   } else {
     document.getElementById('create-request').style.display = 'block';
   }
 
-  var requestsId = user.requestsId();
+  var requestsId = exports.user.requestsId();
   var tr;
   var table = list_request.querySelector('table');
-  removeElements(table, 'tr', 1);
+  functions.removeElements(table, 'tr', 1);
   if (requestsId.length === 0) {
     tr = document.createElement('tr');
     var td = document.createElement('td');
@@ -143,17 +137,17 @@ function showRequests(event) {
 
   for (var k = 0; k < requestsId.length; k++) {
     var id = requestsId[k];
-    var request = getObject(id);
+    var request = script.getObject(id);
 
     tr = document.createElement('tr');
-    createSimpleElement(tr, 'td',
+    functions.createSimpleElement(tr, 'td',
             request.id(),
             request.customerId(),
             request.performerId(),
             request.summary(),
             request.priority(),
             request.estimated(),
-            request.deadline().toLocaleString("ru", options),
+            request.deadline().toLocaleString("ru", exports.options),
             request.ready() + '%'
             );
 
@@ -164,7 +158,7 @@ function showRequests(event) {
   if (trs[1].children.length !== 1) {
     for (var l = 1; l < trs.length; l++) {
       trs[l].temp = trs[l].firstElementChild.innerHTML;
-      trs[l].addEventListener('click', selectRequest);
+      trs[l].addEventListener('click', exports.selectRequest);
     }
   }
   if (event.preventDefault) {
@@ -172,56 +166,56 @@ function showRequests(event) {
   } else {
     event.returnValue = false;
   }
-}
+};
 
 /**
  * Функция отображает детали заявки с идентификатором id
  * @param {number} id - Идентификатор заявки
  * @returns {undefined}
  */
-function showRequestDetails(id) {
-  hide();
-  request_details.style.display = 'block';
-  request = getObject(id);
-  var login = user.login();
+exports.showRequestDetails = function(id) {
+  functions.hide();
+  functions.request_details.style.display = 'block';
+  exports.request = script.getObject(id);
+  var login = exports.user.login();
   var span = document.getElementsByClassName('user');
   for (var i = 0; i < span.length; i++) {
     span[i].innerHTML = login;
   }
   span = document.getElementById('request');
-  span.innerHTML = request.id();
+  span.innerHTML = exports.request.id();
 
-  if (user.type() === 'Клиент')
+  if (exports.user.type() === 'Клиент')
     document.getElementById('edit-request').style.display = 'none';
   else
     document.getElementById('edit-request').style.display = 'block';
 
-  var table = request_details.querySelector('table');
-  removeElements(table, 'tr', 1);
+  var table = functions.request_details.querySelector('table');
+  functions.removeElements(table, 'tr', 1);
   tr = document.createElement('tr');
-  createSimpleElement(tr, 'td',
-          request.customerId(),
-          request.performerId(),
-          request.summary(),
-          request.priority(),
-          request.estimated(),
-          request.created(),
-          request.deadline(),
-          request.ready() + '%'
+  functions.createSimpleElement(tr, 'td',
+          exports.request.customerId(),
+          exports.request.performerId(),
+          exports.request.summary(),
+          exports.request.priority(),
+          exports.request.estimated(),
+          exports.request.created(),
+          exports.request.deadline(),
+          exports.request.ready() + '%'
           );
   table.appendChild(tr);
 
   var div = document.getElementById('description');
-  div.innerHTML = request.description();
+  div.innerHTML = exports.request.description();
 
-  var commentsId = request.commentsId();
+  var commentsId = exports.request.commentsId();
   var comments = document.getElementById('comments');
   if (commentsId.length === 0)
     comments.innerHTML = '<h3>Комментариев еще нет.</h3>';
   else {
     comments.innerHTML = '<h3>Комментарии:</h3>';
     for (var k = 0; k < commentsId.length; k++) {
-      var comment = getObject(commentsId[k]);
+      var comment = script.getObject(commentsId[k]);
       var ul = document.createElement('ul');
       var li1 = document.createElement('li');
       li1.innerHTML = comment.date() + ' - ' + comment.type() + ' [' + comment.userId() + ']';
@@ -233,74 +227,74 @@ function showRequestDetails(id) {
       comments.appendChild(ul);
     }
   }
-}
+};
 
 /**
  * Функция регистрации пользователя
  * @param {object} event - Объект события
  * @returns {Boolean}
  */
-function auth(event) {
+exports.auth = function(event) {
   event = event || window.event;
-  var login = authorisation.querySelector('input[name="login"]');
+  var login = functions.authorisation.querySelector('input[name="login"]');
 
-  if (validate(login.value, 1)) {
-    user = getObject(login.value);
-    if (user !== null) {
-      showRequests();
+  if (script.validate(login.value, 1)) {
+    exports.user = script.getObject(login.value);
+    if (exports.user !== null) {
+      exports.showRequests();
       return false;
     }
   }
-  displayError("Ошибка!");
+  functions.displayError("Ошибка!");
   if (event.preventDefault) {
     event.preventDefault();
   } else {
     event.returnValue = false;
   }
-}
+};
 
 /**
  * Обработчик события выбора заявки
  * @param {object} event - Объект события
  * @returns {undefined}
  */
-function selectRequest(event) {
+exports.selectRequest = function(event) {
   event = event || window.event;
   var target = event.target || event.srcElement;
   if (event.currentTarget.tagName === 'TR') {
     id = event.currentTarget.temp;
     event.stopPropagation();
-    showRequestDetails(id);
+    exports.showRequestDetails(id);
   }
   if (event.preventDefault) {
     event.preventDefault();
   } else {
     event.returnValue = false;
   }
-}
+};
 
 /**
  * Функция отображения формы создания заявки
  * @param {object} event
  * @returns {undefined}
  */
-function createRequest(event) {
+exports.createRequest = function(event) {
   event = event || window.event;
-  hide();
-  create_request.style.display = 'block';
-  var performer = create_request.querySelector('select[name="performer"]');
+  functions.hide();
+  functions.create_request.style.display = 'block';
+  var performer = functions.create_request.querySelector('select[name="performer"]');
 
   var performersId = [];
   for (var id in localStorage) {
     try {
-      var object = getObject(id);
+      var object = script.getObject(id);
       if (object.login() !== undefined && object.type() == 'Исполнитель')
         performersId.push(id);
     } catch (err) {
 
     }
   }
-  removeElements(performer, 'option', 0);
+  functions.removeElements(performer, 'option', 0);
   for (var i = 0; i < performersId.length; i++) {
     var option = document.createElement('option');
     option.innerHTML = performersId[i];
@@ -311,41 +305,41 @@ function createRequest(event) {
   } else {
     event.returnValue = false;
   }
-}
+};
 
 /**
  * Функция создания заявки
  * @param {object} event
  * @returns {Boolean}
  */
-function recordRequest(event) {
+exports.recordRequest = function(event) {
   event = event || window.event;
 
-  var created = new Date().toLocaleString('ru', options);
-  var performer = create_request.querySelector('select[name="performer"]').value;
-  var summary = create_request.querySelector('input[name="summary"]').value;
-  var description = create_request.querySelector('textarea').value;
-  var priority = create_request.querySelector('select[name="priority"]').value;
-  var estimated = create_request.querySelector('input[name="estimated"]').value;
+  var created = new Date().toLocaleString('ru', exports.options);
+  var performer = functions.create_request.querySelector('select[name="performer"]').value;
+  var summary = functions.create_request.querySelector('input[name="summary"]').value;
+  var description = functions.create_request.querySelector('textarea').value;
+  var priority = functions.create_request.querySelector('select[name="priority"]').value;
+  var estimated = functions.create_request.querySelector('input[name="estimated"]').value;
 
-  if (!validate(estimated, 4) || summary.length === 0 || description.length === 0) {
-    displayError('Ошибка!');
+  if (!script.validate(estimated, 4) || summary.length === 0 || description.length === 0) {
+    functions.displayError('Ошибка!');
     return false;
   }
 
   var deadline = new Date(
-          create_request.querySelector('.years').value,
-          create_request.querySelector('.months').value,
-          create_request.querySelector('.days').value,
-          create_request.querySelector('input[name="hours"]').value,
-          create_request.querySelector('input[name="minutes"]').value,
-          create_request.querySelector('input[name="seconds"]').value
-          ).toLocaleString('ru', options);
+          functions.create_request.querySelector('.years').value,
+          functions.create_request.querySelector('.months').value,
+          functions.create_request.querySelector('.days').value,
+          functions.create_request.querySelector('input[name="hours"]').value,
+          functions.create_request.querySelector('input[name="minutes"]').value,
+          functions.create_request.querySelector('input[name="seconds"]').value
+          ).toLocaleString('ru', exports.options);
 
-  var request = new Request();
+  var request = new script.Request();
   request.created(created);
   request.performerId(performer);
-  request.customerId(user.id());
+  request.customerId(exports.user.id());
   request.summary(summary);
   request.description(description);
   request.priority(priority);
@@ -353,84 +347,84 @@ function recordRequest(event) {
   request.deadline(deadline);
   request.ready(0);
   request.id(Math.uuid(20));
-  saveObject(request);
+  script.saveObject(request);
 
-  user = getObject(user.id());
-  user.addRequestId(request.id());
-  saveObject(user);
+  exports.user = script.getObject(exports.user.id());
+  exports.user.addRequestId(request.id());
+  script.saveObject(exports.user);
 
-  var performerUser = getObject(performer);
+  var performerUser = script.getObject(performer);
   performerUser.addRequestId(request.id());
-  saveObject(performerUser);
+  script.saveObject(performerUser);
 
-  var admin = getObject('admin');
+  var admin = script.getObject('admin');
   admin.addRequestId(request.id());
-  saveObject(admin);
+  script.saveObject(admin);
 
-  showRequests(user);
+  exports.showRequests(exports.user);
 
   if (event.preventDefault) {
     event.preventDefault();
   } else {
     event.returnValue = false;
   }
-}
+};
 
 /**
  * Функция создания комментария
  * @param {object} event - Объект события
  * @returns {Boolean}
  */
-function createComment(event) {
+exports.createComment = function(event) {
   event = event || window.event;
-  var text = create_comment.querySelector('[name="text"]').value;
-  var type = create_comment.querySelector('[name="type"]').value;
-  var created = new Date().toLocaleString('ru', options);
+  var text = functions.create_comment.querySelector('[name="text"]').value;
+  var type = functions.create_comment.querySelector('[name="type"]').value;
+  var created = new Date().toLocaleString('ru', exports.options);
 
-  if (!validate(text, 0)) {
-    displayError("Ошибка!");
+  if (!script.validate(text, 0)) {
+    functions.displayError("Ошибка!");
     return false;
   }
 
-  comment = new Comment();
-  comment.id(Math.uuid(20));
-  comment.type(type);
-  comment.date(created);
-  comment.userId(user.id());
-  comment.text(text);
-  saveObject(comment);
+  exports.comment = new script.Comment();
+  exports.comment.id(Math.uuid(20));
+  exports.comment.type(type);
+  exports.comment.date(created);
+  exports.comment.userId(exports.user.id());
+  exports.comment.text(text);
+  script.saveObject(exports.comment);
 
-  request = getObject(request.id());
-  request.addCommentId(comment.id());
-  saveObject(request);
+  exports.request = script.getObject(exports.request.id());
+  exports.request.addCommentId(exports.comment.id());
+  script.saveObject(exports.request);
 
-  showRequestDetails(request.id());
+  exports.showRequestDetails(exports.request.id());
   if (event.preventDefault) {
     event.preventDefault();
   } else {
     event.returnValue = false;
   }
-}
+};
 
 /**
  * Функция отображения болка редактирования заявки
  * @param {object} event - Объект события
  * @returns {undefined}
  */
-function editRequest(event) {
+exports.editRequest = function(event) {
   event = event || window.event;
-  hide();
-  edit_request.style.display = 'block';
+  functions.hide();
+  functions.edit_request.style.display = 'block';
 
   var elem = document.getElementById('administrator-edit');
-  if (user.type() == 'Администратор') {
+  if (exports.user.type() == 'Администратор') {
     elem.style.display = 'block';
-    var performer = edit_request.querySelector('[name="performer"]');
-    removeElements(performer, 'option', 0);
+    var performer = functions.edit_request.querySelector('[name="performer"]');
+    functions.removeElements(performer, 'option', 0);
     var performersId = [];
     for (var id in localStorage) {
       try {
-        var object = getObject(id);
+        var object = script.getObject(id);
         if (object.login() !== undefined && object.type() == 'Исполнитель')
           performersId.push(id);
       } catch (err) {
@@ -459,47 +453,47 @@ function editRequest(event) {
   } else {
     event.returnValue = false;
   }
-}
+};
 /**
  * Функция редактирования заявки
  * @param {object} event - Объект события
  * @returns {Boolean}
  */
-function submitRequest(event) {
+exports.submitRequest = function(event) {
   event = event || window.event;
-  request = getObject(request.id());
+  exports.request = script.getObject(exports.request.id());
 
-  if (user.type() === 'Администратор') {
-    var performer = edit_request.querySelector('select[name="performer"]').value;
-    var estimated = edit_request.querySelector('input[name="estimated"]').value;
-    if (!validate(estimated, 4)) {
-      displayError('Ошибка!');
+  if (exports.user.type() === 'Администратор') {
+    var performer = functions.edit_request.querySelector('select[name="performer"]').value;
+    var estimated = functions.edit_request.querySelector('input[name="estimated"]').value;
+    if (!script.validate(estimated, 4)) {
+      functions.displayError('Ошибка!');
       return false;
     }
 
     var deadline = new Date(
-            edit_request.querySelector('.years').value,
-            edit_request.querySelector('.months').value,
-            edit_request.querySelector('.days').value,
-            edit_request.querySelector('input[name="hours"]').value,
-            edit_request.querySelector('input[name="minutes"]').value,
-            edit_request.querySelector('input[name="seconds"]').value
-            ).toLocaleString('ru', options);
-    request.performerId(performer);
-    request.estimated(estimated);
-    request.deadline(deadline);
+            functions.edit_request.querySelector('.years').value,
+            functions.edit_request.querySelector('.months').value,
+            functions.edit_request.querySelector('.days').value,
+            functions.edit_request.querySelector('input[name="hours"]').value,
+            functions.edit_request.querySelector('input[name="minutes"]').value,
+            functions.edit_request.querySelector('input[name="seconds"]').value
+            ).toLocaleString('ru', exports.options);
+    exports.request.performerId(performer);
+    exports.request.estimated(estimated);
+    exports.request.deadline(deadline);
   }
-  var ready = edit_request.querySelector('input[name="ready"]').value;
-  if (!validate(ready, 4) || ready < 0 || ready > 100) {
-    displayError('Ошибка!');
+  var ready = functions.edit_request.querySelector('input[name="ready"]').value;
+  if (!script.validate(ready, 4) || ready < 0 || ready > 100) {
+    functions.displayError('Ошибка!');
     return false;
   }
-  request.ready(ready);
-  saveObject(request);
-  showRequestDetails(request.id());
+  exports.request.ready(ready);
+  script.saveObject(exports.request);
+  exports.showRequestDetails(exports.request.id());
   if (event.preventDefault) {
     event.preventDefault();
   } else {
     event.returnValue = false;
   }
-}
+};

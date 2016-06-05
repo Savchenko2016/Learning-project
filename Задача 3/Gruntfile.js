@@ -1,48 +1,37 @@
 module.exports = function(grunt) {
-
-    grunt.initConfig({
-        pkg: grunt.file.readJSON('package.json'),
-
-        concat: {
-	  dist: {
-	    src: ['script/script.js', 'script/functions.js', 'script/events.js', 'script/main.js'],
-	    dest: 'script/dist/built.js',
-	  },
-        },
-        
-        uglify: {
-	  build: {
-	    src: 'script/dist/built.js',
-	    dest: 'script/dist/built.min.js'
-	  }
-	},
-	
-	imagemin: {
-	  dynamic: {
-	      files: [{
-		  expand: true,
-		  cwd: 'images/',
-		  src: ['**/*.{png,jpg,gif}'],
-		  dest: 'images/build/'
-	      }]
-	  }
-	},
-	
-	watch: {
-	    scripts: {
-		files: ['script/*.js'],
-		tasks: ['concat', 'uglify'],
-		options: {
-		    spawn: false,
-		},
+  require("matchdep").filterAll("grunt-*").forEach(grunt.loadNpmTasks);
+  var webpack = require("webpack");
+  var webpackConfig = require("./webpack.config.js");
+  grunt.initConfig({
+    pkg: grunt.file.readJSON('package.json'),
+    webpack: {
+      options: webpackConfig,
+      build: {
+        plugins: webpackConfig.plugins.concat(
+          new webpack.DefinePlugin({
+	    "process.env": {
+	      "NODE_ENV": JSON.stringify("production")
 	    }
-	}
-    });
+	  }),
+	  new webpack.optimize.UglifyJsPlugin()
+	)
+      },
+      "build-dev": {
+	devtool: "sourcemap",
+	debug: true
+      }
+    },
+    watch: {
+      app: {
+        files: ["frontend/**/*", "node_modules/**/*"],
+        tasks: ["webpack:build-dev"],
+        options: {
+          spawn: false,
+        }
+      }
+    }
+  });
 
-    grunt.loadNpmTasks('grunt-contrib-concat');
-    grunt.loadNpmTasks('grunt-contrib-uglify');
-    grunt.loadNpmTasks('grunt-contrib-imagemin');
-    grunt.loadNpmTasks('grunt-contrib-watch');    
-    
-    grunt.registerTask('default', ['concat', 'uglify', 'imagemin']);
-}; 
+  grunt.registerTask("default", ["webpack:build-dev", "watch:app"]);
+  grunt.registerTask("build", ["webpack:build"]);
+};

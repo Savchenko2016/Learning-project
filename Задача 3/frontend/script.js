@@ -1,8 +1,9 @@
-function isNumeric(n) {
+var exports = module.exports = {};
+exports.isNumeric = function(n) {
   return !isNaN(parseFloat(n)) && isFinite(n);
-}
+};
 
-var VALIDATE_ARR = [
+exports.VALIDATE_ARR = [
   /^[а-яА-ЯёЁa-zA-Z0-9\s.?"',:;%@!()]+$/, //простой текст
   /^[a-zA-Z][a-zA-Z0-9-_\.]{2,20}$/, //логин
   /^([a-zA-Z0-9_-]+\.)*[a-zA-Z0-9_-]+@[a-z0-9_-]+(\.[a-z0-9_-]+)*\.[a-z]{2,6}$/, //email
@@ -10,18 +11,18 @@ var VALIDATE_ARR = [
   /^[1-9][0-9]+$/ //int
 ];
 
-function validate(content, type) {
+exports.validate = function(content, type) {
   if (type == 4)
-    return isNumeric(content);
-  var regexp = VALIDATE_ARR[type];
+    return exports.isNumeric(content);
+  var regexp = exports.VALIDATE_ARR[type];
   return regexp.test(content);
-}
+};
 /**
  * Конструктор пользователя системы управления заявками
  * @constructor
  * @returns {User}
  */
-function User() {
+exports.User = function() {
   var id;
   var login;
   var password;
@@ -32,7 +33,7 @@ function User() {
   this.attrs = ['name', 'id', 'login', 'password', 'email', 'type', 'requestsId'];
 
   this.name = function () {
-    return this.constructor.name;
+    return 'User';
   };
 
   this.id = function (userId) {
@@ -51,7 +52,7 @@ function User() {
     if (!arguments.length)
       return login;
 
-    if (validate(userLogin, 1))
+    if (exports.validate(userLogin, 1))
       login = userLogin;
   };
 
@@ -59,7 +60,7 @@ function User() {
     if (!arguments.length)
       return password;
 
-    if (validate(userPassword, 3))
+    if (exports.validate(userPassword, 3))
       password = userPassword;
   };
 
@@ -67,7 +68,7 @@ function User() {
     if (!arguments.length)
       return email;
 
-    if (validate(userEmail, 2))
+    if (exports.validate(userEmail, 2))
       email = userEmail;
   };
 
@@ -91,14 +92,14 @@ function User() {
       return null;
     return requestId[index];
   };
-}
+};
 
 /**
  * Конструктор комментария
  * @constructor
  * @returns {Comment}
  */
-function Comment() {
+exports.Comment = function() {
   var id;
   var userId;
   var text;
@@ -108,7 +109,7 @@ function Comment() {
   this.attrs = ['name', 'id', 'userId', 'text', 'type', 'date'];
 
   this.name = function () {
-    return this.constructor.name;
+    return 'Comment';
   };
 
   this.id = function (commentId) {
@@ -128,7 +129,7 @@ function Comment() {
     if (!arguments.length)
       return text;
 
-    if (validate(commentText, 0))
+    if (exports.validate(commentText, 0))
       text = commentText;
   };
 
@@ -146,14 +147,14 @@ function Comment() {
 
     date = commentDate;
   };
-}
+};
 
 /**
  * Конструктор заявки
  * @constructor
  * @returns {Request}
  */
-function Request() {
+exports.Request = function() {
   var id;
   var customerId;
   var performerId;
@@ -169,7 +170,7 @@ function Request() {
   this.attrs = ['name', 'id', 'customerId', 'performerId', 'description', 'summary', 'priority', 'estimated', 'deadline', 'commentsId', 'ready', 'created'];
 
   this.name = function () {
-    return this.constructor.name;
+    return 'Request';
   };
 
   this.id = function (requestId) {
@@ -216,7 +217,7 @@ function Request() {
     if (!arguments.length)
       return description;
 
-    if (validate(requestDescription, 0))
+    if (exports.validate(requestDescription, 0))
       description = requestDescription;
   };
 
@@ -224,7 +225,7 @@ function Request() {
     if (!arguments.length)
       return summary;
 
-    if (validate(requestSummary, 0))
+    if (exports.validate(requestSummary, 0))
       summary = requestSummary;
   };
 
@@ -240,7 +241,7 @@ function Request() {
     if (!arguments.length)
       return estimated;
 
-    if (isNumeric(requestEstimated) && requestEstimated >= 0)
+    if (exports.isNumeric(requestEstimated) && requestEstimated >= 0)
       estimated = requestEstimated;
   };
 
@@ -262,10 +263,10 @@ function Request() {
     if (!arguments.length)
       return ready;
 
-    if (isNumeric(requestReady) && requestReady >= 0 && requestReady <= 100)
+    if (exports.isNumeric(requestReady) && requestReady >= 0 && requestReady <= 100)
       ready = requestReady;
   };
-}
+};
 
 Math.uuid = (function () {
   var CHARS = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'.split('');
@@ -295,8 +296,7 @@ Math.uuid = (function () {
   };
 })();
 
-if (typeof (Storage) !== 'undefined') {
-  var getAttributes = function (object) {
+exports.getAttributes = function (object) {
     if (typeof (object) !== 'object')
       return null;
     var result = {};
@@ -307,31 +307,28 @@ if (typeof (Storage) !== 'undefined') {
     return result;
   };
 
-  var saveObject = function (object) {
+exports.saveObject = function (object) {
     if (typeof (object) !== 'object')
       return null;
-    var str = JSON.stringify(getAttributes(object));
+    var str = JSON.stringify(exports.getAttributes(object));
     localStorage[object.id()] = str;
   };
 
-  var getObject = function (id) {
-    if (id in localStorage) {
-      var object = JSON.parse(localStorage[id]);
-      return init(object);
-    }
-    return null;
-  };
-
-  var init = function (object) {
+exports.init = function (object) {
     if (typeof (object) !== 'object')
       return null;
-    var result = eval('new ' + object.name + '();');
+    var result = eval('new exports.' + object.name + '();');
     delete object.name;
     for (var i in object) {
       result[i](object[i]);
     }
     return result;
   };
-} else {
-  throw("Ошибка! У вас устаревший браузер!");
-}
+
+exports.getObject = function (id) {
+    if (id in localStorage) {
+      var object = JSON.parse(localStorage[id]);
+      return exports.init(object);
+    }
+    return null;
+  };

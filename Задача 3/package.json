@@ -6,6 +6,10 @@
     "grunt-contrib-concat": "^1.0.1",
     "grunt-contrib-imagemin": "^1.0.1",
     "grunt-contrib-uglify": "^1.0.1",
-    "grunt-contrib-watch": "^1.0.0"
+    "grunt-contrib-watch": "^1.0.0",
+    "grunt-webpack": "^1.0.11"
+  },
+  "dependencies": {
+    "dom-loader": "^1.0.4"
   }
 }
