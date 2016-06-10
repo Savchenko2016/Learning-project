@@ -12,66 +12,64 @@ exports.request_details = null;
 exports.performer_creation = null;
 
 exports.hide = function() {
-  exports.authorisation.style.display = 'none';
-  exports.client_registration.style.display = 'none';
-  exports.create_comment.style.display = 'none';
-  exports.create_request.style.display = 'none';
-  exports.edit_request.style.display = 'none';
-  exports.list_request.style.display = 'none';
-  exports.performer_registration.style.display = 'none';
-  exports.select_performer.style.display = 'none';
-  exports.request_details.style.display = 'none';
-  exports.performer_creation.style.display = 'none';
+  exports.authorisation.css('display', 'none');
+  exports.client_registration.css('display', 'none');
+  exports.create_comment.css('display', 'none');
+  exports.create_request.css('display', 'none');
+  exports.edit_request.css('display', 'none');
+  exports.list_request.css('display', 'none');
+  exports.performer_registration.css('display', 'none');
+  exports.select_performer.css('display', 'none');
+  exports.request_details.css('display', 'none');
+  exports.performer_creation.css('display', 'none');
 };
 
 exports.createSimpleElement = function(element, tag) {
-  for (var i = 2; i < arguments.length; i++) {
-    var elem = document.createElement(tag);
-    elem.innerHTML = arguments[i];
-    element.appendChild(elem);
-  }
+  var tmpl = require('./array_elements.ejs');
+  var elem = tmpl({tag: tag, items: arguments});
+  element.append(elem);
 };
 
 exports.displayError = function(text, f) {
-  var error = document.createElement('div');
-  error.className = 'error';
-  error.innerHTML = text;
-  document.body.appendChild(error);
+  var tmpl = require('./error.ejs');
+  var error = tmpl({error: text});
+  $('body').append(error);
   if (f === 'undefined' || f === false)
     return error;
   setTimeout(function () {
-    document.body.removeChild(error);
+    $('.error').remove();
   }, 2000);
   return error;
 };
 
-exports.removeElements = function(element, tag, index) {
-  var elements = element.querySelectorAll(tag);
-  for (var i = index; i < elements.length; i++) {
-    element.removeChild(elements[i]);
-  }
+exports.removeElements = function(element, tag, ind) {
+  var elements = element.find(tag).each(function(index, elem) {
+    if (index >= ind) $(elem).remove();
+  });
 };
 
 exports.injectSelect = function(sel, rowsObject) {
-  for (var i = 0; i < sel.length; i++) {
+  sel.each(function(index, elem) {
     var opt, x;
-    sel[i].innerHTML = "";
+    var elem1 = $(elem);
+    elem1.text("");
     if (rowsObject instanceof Array) {
       for (var k = 0; k < rowsObject.length; k++) {
         opt = document.createElement("option");
         opt.value = k;
         opt.innerHTML = rowsObject[k];
-        sel[i].appendChild(opt);
+        elem1.append($(opt));
       }
-    } else {
+    }
+    else {
       for (x in rowsObject) {
         opt = document.createElement("option");
         opt.value = x;
         opt.innerHTML = rowsObject[x];
-        sel[i].appendChild(opt);
+        elem1.append($(opt));
       }
     }
-  }
+  });
 };
 exports.makeNumbersObject = function(from, to) {
   var result = {}, x;

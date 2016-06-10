@@ -332,3 +332,19 @@ exports.getObject = function (id) {
     }
     return null;
   };
+
+exports.getRequests = function(id, field) {
+  var list = [];
+  var requestsId = exports.getObject(id).requestsId();
+  for (i = 0; i < requestsId.length; i++) {
+    var object = exports.getAttributes(exports.getObject(requestsId[i]));
+    list.push(object);
+  }
+  if (list.length !== 0 && _.has(list[0], field)) {
+    list = _.sortBy(list, function(o) { 
+      if (exports.isNumeric(o[field])) return +o[field];
+      return o[field];
+    });
+  }
+  return list;
+};

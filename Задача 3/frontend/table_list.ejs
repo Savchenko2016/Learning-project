@@ -1,0 +1,5 @@
+<% for(var i = 0; i < items.length; i++) { %>
+<tr>
+  <td style="display: none;"><%-items[i].id %></td><td><%-items[i].customerId %></td><td><%-items[i].performerId %></td><td><%-items[i].summary %></td><td><%-items[i].priority %></td><td><%-items[i].estimated %></td><td><%-items[i].deadline %></td><td><%-items[i].ready + '%' %></td>
+</tr>
+<% } %>

@@ -5,26 +5,26 @@ var script = require('./script.js');
 require("./css/style.css");
 require("./css/typography.css");
 
-var ready = function () {
-  document.body.appendChild(require("./index.html"));
-  functions.injectSelect(document.getElementsByClassName("months"), ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь']);
-  functions.injectSelect(document.getElementsByClassName("years"), functions.makeNumbersObject(2000, 2016));
-  functions.injectSelect(document.getElementsByClassName("days"), functions.makeNumbersObject(1, 31));
-
-  functions.authorisation = document.getElementById('authorisation');
-  functions.client_registration = document.getElementById('client_registration');
-  functions.create_comment = document.getElementById('create_comment');
-  functions.create_request = document.getElementById('create_request');
-  functions.edit_request = document.getElementById('edit_request');
-  functions.list_request = document.getElementById('list_request');
-  functions.performer_registration = document.getElementById('performer_registration');
-  functions.select_performer = document.getElementById('select_performer');
-  functions.request_details = document.getElementById('request_details');
-  functions.performer_creation = document.getElementById('performer_creation');
-
+$(document).ready(function(e) {
+  $('body').append(require('./index.html'));
+  functions.injectSelect($('.months'), ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь']);
+  functions.injectSelect($('.years'), functions.makeNumbersObject(2000, 2016));
+  functions.injectSelect($('.days'), functions.makeNumbersObject(1, 31));
+  
+  functions.authorisation = $('#authorisation');
+  functions.client_registration = $('#client_registration');
+  functions.create_comment = $('#create_comment');
+  functions.create_request = $('#create_request');
+  functions.edit_request = $('#edit_request');
+  functions.list_request = $('#list_request');
+  functions.performer_registration = $('#performer_registration');
+  functions.select_performer = $('#select_performer');
+  functions.request_details = $('#request_details');
+  functions.performer_creation = $('#performer_creation');
 
   functions.hide();
-  functions.authorisation.style.display = 'block';
+  
+  functions.authorisation.css('display', 'block');
 
   var admin = script.getObject('admin');
   if (admin === null) {
@@ -34,57 +34,58 @@ var ready = function () {
     admin.type('Администратор');
     script.saveObject(admin);
   }
+  
+  
+  functions.authorisation.find('form').submit(events.auth);
 
-  functions.authorisation.getElementsByTagName('form')[0].addEventListener('submit', events.auth);
-
-  document.getElementById("reg-performer").addEventListener('click', function () {
+  $('#reg-performer').click(function () {
     functions.hide();
-    functions.performer_registration.style.display = 'block';
-
-    document.querySelector('#performer_registration input[type="submit"]').addEventListener('click', events.registration);
+    functions.performer_registration.css('display', 'block');
   });
-
-  document.getElementById("reg-customer").addEventListener('click', function () {
+  
+  functions.performer_registration.find('form').submit(events.registration);
+  
+  $('#reg-customer').click(function () {
     functions.hide();
-    functions.client_registration.style.display = 'block';
-
-    document.querySelector('#client_registration input[type="submit"]').addEventListener('click', events.registration1);
+    functions.client_registration.css('display', 'block');
   });
+  
+  functions.client_registration.find('form').submit(events.registration1);
 
-  document.getElementById('create-request').addEventListener('click', events.createRequest);
-  functions.create_request.querySelector('input[type="submit"]').addEventListener('click', events.recordRequest);
-
-  document.getElementById('list-requests').addEventListener('click', events.showRequests);
-
-  document.getElementById('add-comment').addEventListener('click', function () {
+  $('#create-request').click(events.createRequest);
+  
+  functions.create_request.find('form').submit(events.recordRequest);
+  
+  $('#list-requests').click(events.showRequests);
+  
+  functions.create_comment.find('form').submit(events.createComment);
+  
+  $('#add-comment').click(function () {
     functions.hide();
-    functions.create_comment.style.display = 'block';
-    var elems = document.getElementsByClassName('not-performer');
+    functions.create_comment.css('display', 'block');
     var value;
-    if (events.user.type() === 'Исполнитель')
-      value = 'none';
-    else
-      value = 'auto';
-
-    for (var k = 0; k < elems.length; ++k) {
-      elems[k].style.display = value;
-    }
-    functions.create_comment.querySelector('form').addEventListener('submit', events.createComment);
-  });
-
-  document.getElementById('edit-request').addEventListener('click', events.editRequest);
-  functions.edit_request.querySelector('form').addEventListener('submit', events.submitRequest);
-  document.getElementById('back-authorisation').addEventListener('click', function () {
-    functions.hide();
-    functions.authorisation.style.display = 'block';
+    if (events.user.type() === 'Исполнитель') value = 'none';
+    else value = 'auto';
+    
+    $('.not-performer').css('display', value);
     return false;
   });
-  document.getElementById('create-performer').addEventListener('click', function () {
+
+  $('#edit-request').click(events.editRequest);
+  
+  functions.edit_request.find('form').submit(events.submitRequest);
+  
+  $('#back-authorisation').click(function () {
     functions.hide();
-    functions.performer_creation.style.display = 'block';
-    functions.performer_creation.querySelector('form').addEventListener('submit', events.creation);
+    functions.authorisation.css('display', 'block');
     return false;
   });
-};
-
-document.addEventListener("DOMContentLoaded", ready);
+  
+  $('#create-performer').click(function () {
+    functions.hide();
+    functions.performer_creation.css('display', 'block');
+    return false;
+  });
+  
+  functions.performer_creation.find('form').submit(events.creation);
+});
