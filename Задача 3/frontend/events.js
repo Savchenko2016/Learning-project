@@ -7,6 +7,9 @@ exports.user = null;
 exports.request = null;
 exports.comment = null;
 
+var customer = null;
+var status = null;
+var summary = null;
 var list = null;
 
 exports.options = {
@@ -80,35 +83,12 @@ exports.registration1 = function(e) {
   }
   e.preventDefault();
 };
-/**
- * Функция отображения списка заявок
- * @param {object} event - Объект события
- * @returns {Boolean}
- */
 
-exports.sortRequests = function(table, id, field) {
-  list = script.getRequests(id, field);
-
-  functions.removeElements(table, 'tr', 1);
-  if (list.length === 0) {
-    tr = $('<tr><td colspan="7">Нет заявок</td></tr>');
-    table.append(tr);
-    return;
-  }
-  var tmpl = require('./table_list.ejs');
-  var tr = tmpl({items: list});
-  table.append(tr);
-};
-
-exports.sortRequests1 = function(e) {
-  if (e.currentTarget.tagName === 'TH') {
-    e.stopPropagation();
-    var field = e.currentTarget.getAttribute('temp');
-    var table = functions.list_request.find('table');
-    exports.sortRequests(table, exports.user.id(), field);
-    
-    table.find('td').children().unbind();
-    table.find('tr').each(function(index, elem) {
+exports.delegateEventsTable = function(table) {
+  table.find('th').unbind();
+  table.find('tr').unbind();
+  
+  table.find('tr').each(function(index, elem) {
     var elem1 = $(elem);
     if (index === 0) {
       elem1.children().click(exports.sortRequests1);
@@ -117,9 +97,51 @@ exports.sortRequests1 = function(e) {
     elem1.prop('temp', elem1.children(':first').text());
     elem1.click(exports.selectRequest);
   });
+}
+
+/**
+ * Функция сортировки и вывода списка заявок
+ * @param {object} table - объект таблицы списка заявок
+ * @param {number} id - id пользовтаеля
+ * @param {string} field - название совйства объекта заявки, по которому производится сортировка таблицы
+ * @param {object} object - объект фильтрации списка заявок
+ * @returns {undefined}
+ */
+exports.sortRequests = function(table, id, field, object) {
+  if (object === undefined || typeof(object) !== 'object') 
+    object = {}; 
+  list = script.getRequests(id, field, object);
+
+  functions.removeElements(table, 'tr', 1);
+  if (list.length === 0) {
+    tr = $('<tr><td colspan="8">Нет заявок</td></tr>');
+    table.append(tr);
+    return;
+  }
+  var tmpl = require('./table_list.ejs');
+  var tr = tmpl({items: list});
+  table.append(tr);
+};
+
+/**
+ * Обработчик события клика на th элементах таблицы
+ * @param {object} e - Объект события
+ * @returns {undefined}
+ */
+exports.sortRequests1 = function(e) {
+  if (e.currentTarget.tagName === 'TH') {
+    e.stopPropagation();
+    var field = e.currentTarget.getAttribute('temp');
+    var table = functions.list_request.find('table');
+    exports.sortRequests(table, exports.user.id(), field);
+    exports.delegateEventsTable(table);
   }
 };
 
+/**
+ * Функция отображения списка заявок
+ * @returns {undefined}
+ */
 exports.showRequests = function() {
   var i;
   functions.hide();
@@ -137,21 +159,33 @@ exports.showRequests = function() {
   } else {
     $('#create-request').css('display', 'block');
   }
+  
+  if (exports.user.type() == 'Клиент') {
+    $('#filter-customer').css('display', 'none');
+  } else {
+    $('#filter-customer').css('display', 'inline-block');
+  
+    var customer = functions.list_request.find('select[name="customer"]');
 
+    var customersId = [];
+    for (var id in localStorage) {
+      try {
+	var object = script.getObject(id);
+	if (object.login() !== undefined && object.type() == 'Клиент')
+	  customersId.push(id);
+      } catch (err) {
+
+      }
+    }
+    functions.removeElements(customer, 'option', 1);
+    var tmpl = require('./options.ejs');
+    var options = tmpl({items: customersId});
+    customer.append(options);
+  }
+  
   var table = functions.list_request.find('table');
   exports.sortRequests(table, exports.user.id(), 'created');
-
-  table.find('tr').children().unbind();
-  table.find('tr').each(function(index, elem) {
-    var elem1 = $(elem);
-    if (table.find('tr').length === 1) return;
-    if (index === 0) {
-      elem1.children().click(exports.sortRequests1);
-      return;
-    }
-    elem1.prop('temp', elem1.children(':first').text());
-    elem1.click(exports.selectRequest);
-  });
+  exports.delegateEventsTable(table);
 };
 
 /**
@@ -183,7 +217,8 @@ exports.showRequestDetails = function(id) {
           exports.request.estimated(),
           exports.request.created(),
           exports.request.deadline(),
-          exports.request.ready() + '%'
+          exports.request.ready() + '%',
+	  exports.request.status()
           );
   table.append(tr);
 
@@ -278,6 +313,7 @@ exports.recordRequest = function(e) {
   var description = functions.create_request.find('textarea').prop('value');
   var priority = functions.create_request.find('select[name="priority"]').prop('value');
   var estimated = functions.create_request.find('input[name="estimated"]').prop('value');
+  var status = 'Открыто';
 
   if (!script.validate(estimated, 4) || summary.length === 0 || description.length === 0) {
     functions.displayError('Ошибка!');
@@ -304,6 +340,7 @@ exports.recordRequest = function(e) {
   request.deadline(deadline);
   request.ready(0);
   request.id(Math.uuid(20));
+  request.status(status);
   script.saveObject(request);
 
   exports.user = script.getObject(exports.user.id());
@@ -313,6 +350,10 @@ exports.recordRequest = function(e) {
   var performerUser = script.getObject(performer);
   performerUser.addRequestId(request.id());
   script.saveObject(performerUser);
+  
+  var admin = script.getObject('admin');
+  admin.addRequestId(request.id());
+  script.saveObject(admin);
 
   exports.showRequests(exports.user);
   e.preventDefault();
@@ -389,10 +430,11 @@ exports.editRequest = function(e) {
  */
 exports.submitRequest = function(e) {
   exports.request = script.getObject(exports.request.id());
-
+  var performerOld = exports.request.performerId();
   if (exports.user.type() === 'Администратор') {
     var performer = functions.edit_request.find('select[name="performer"]').prop('value');
     var estimated = functions.edit_request.find('input[name="estimated"]').prop('value');
+    var status = functions.edit_request.find('select[name="status"]').prop('value');
     if (!script.validate(estimated, 4)) {
       functions.displayError('Ошибка!');
       return false;
@@ -411,12 +453,64 @@ exports.submitRequest = function(e) {
     exports.request.deadline(deadline);
   }
   var ready = functions.edit_request.find('input[name="ready"]').prop('value');
+  var status = functions.edit_request.find('select[name="status"]').prop('value');
   if (!script.validate(ready, 4) || ready < 0 || ready > 100) {
     functions.displayError('Ошибка!');
+    exports.request = script.getObject(exports.request.id());
     return false;
   }
   exports.request.ready(ready);
+  exports.request.status(status);
   script.saveObject(exports.request);
   exports.showRequestDetails(exports.request.id());
+  
+  var user = script.getObject(performer);
+  user.addRequestId(exports.request.id());
+  script.saveObject(user);
+  
+  user = script.getObject(performerOld);
+  user.removeRequestId(exports.request.id());
+  script.saveObject(user);
+  
   e.preventDefault();
+};
+/**
+ * Функция вывода списка заявок, отфильтрованных по клиентам
+ * @returns {undefined}
+ */
+exports.filterCustomer = function() {
+  customer = $(this).prop('value');
+  customer = customer === 'Любой' ? null : customer;
+  var table = functions.list_request.find('table');
+  exports.sortRequests(table, exports.user.id(), 'created', {customerId: customer, status: status});
+  exports.delegateEventsTable(table);
+};
+
+/**
+ * Функция вывода списка заявок, отфильтрованных по статусу
+ * @returns {undefined}
+ */
+exports.filterStatus = function() {
+  status = $(this).prop('value');
+  status = status === 'Любой' ? null : status;
+  var table = functions.list_request.find('table');
+  exports.sortRequests(table, exports.user.id(), 'created', {customerId: customer, status: status});
+  exports.delegateEventsTable(table);
+};
+
+/**
+ * Функция вывода списка заявок, отфильтрованных по названию
+ * @returns {undefined}
+ */
+exports.filterSummary = function() {
+  summary = $(this).find('input:first').prop('value');
+  if (script.validate(summary, 0)) {
+    var table = functions.list_request.find('table');
+    exports.sortRequests(table, exports.user.id(), 'created', {summary: summary});
+    exports.delegateEventsTable(table);
+  }
+  else {
+    functions.displayError('Ошибка!');
+  }
+  return false;
 };

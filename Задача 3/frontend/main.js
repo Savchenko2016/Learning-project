@@ -88,4 +88,8 @@ $(document).ready(function(e) {
   });
   
   functions.performer_creation.find('form').submit(events.creation);
+  
+  functions.list_request.find('select[name="customer"]').change(events.filterCustomer);
+  functions.list_request.find('select[name="status"]').change(events.filterStatus);
+  functions.list_request.find('.search form').submit(events.filterSummary);
 });

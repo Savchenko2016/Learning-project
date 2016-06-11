@@ -87,6 +87,13 @@ exports.User = function() {
     return true;
   };
 
+  this.removeRequestId = function (id) {
+    if (!arguments.length)
+      return false;
+    requestsId.splice( requestsId.indexOf(id), 1 );
+    return true;
+  };
+  
   this.getRequestId = function (index) {
     if (index >= requestsId.length)
       return null;
@@ -166,8 +173,10 @@ exports.Request = function() {
   var deadline;
   var commentsId = [];
   var ready;
+  var status;
   var PRIORITY_ARR = ['LOW', 'MEDIUM', 'HIGH'];
-  this.attrs = ['name', 'id', 'customerId', 'performerId', 'description', 'summary', 'priority', 'estimated', 'deadline', 'commentsId', 'ready', 'created'];
+  var STATUS_ARR = ['Открыто', 'Переоткрыто', 'Проверка', 'Закрыто'];
+  this.attrs = ['name', 'id', 'customerId', 'performerId', 'description', 'summary', 'priority', 'estimated', 'deadline', 'commentsId', 'ready', 'created', 'status'];
 
   this.name = function () {
     return 'Request';
@@ -237,6 +246,14 @@ exports.Request = function() {
       priority = requestPriority;
   };
 
+  this.status = function (requestStatus) {
+    if (!arguments.length)
+      return status;
+
+    if (STATUS_ARR.indexOf(requestStatus) != -1)
+      status = requestStatus;
+  };
+  
   this.estimated = function (requestEstimated) {
     if (!arguments.length)
       return estimated;
@@ -333,12 +350,19 @@ exports.getObject = function (id) {
     return null;
   };
 
-exports.getRequests = function(id, field) {
+exports.getRequests = function(id, field, object1) {
   var list = [];
   var requestsId = exports.getObject(id).requestsId();
   for (i = 0; i < requestsId.length; i++) {
     var object = exports.getAttributes(exports.getObject(requestsId[i]));
-    list.push(object);
+    var f = true;
+    for (var key in object1) {
+      if (object1[key] !== null && object[key] !== object1[key]) {
+	f = false;
+	break;
+      }
+    }
+    if (f) list.push(object);
   }
   if (list.length !== 0 && _.has(list[0], field)) {
     list = _.sortBy(list, function(o) { 

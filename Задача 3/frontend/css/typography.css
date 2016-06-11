@@ -44,7 +44,7 @@ h3 {
   font-size: 14px;
 }
 
-.form form select {
+.form form select, .filter form select {
   color: #eee;
 }
 
@@ -86,4 +86,15 @@ article .content {
 
 .error {
   color: #fff;
+}
+
+.search form input {
+  color: #606468;
+}
+
+.search form input[type="submit"] {
+  color: #eee;
+  font-weight: bold;
+  text-transform: uppercase;
+  text-align: center;
 }

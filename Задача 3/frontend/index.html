@@ -1,7 +1,7 @@
   <div id="authorisation">
     <section class="form">
       <h3>Авторизация</h3>
-      <form action="javascript:void(0);" method="get">
+      <form action="javascript:void(0);" method="get" novalidate>
 	<fieldset class="clearfix">
 	  <p><input type="text" placeholder="Логин" name="login" required></p>
 	  <p><input type="submit" value="ВОЙТИ" class="button"></p>
@@ -15,7 +15,7 @@
   <div id="client_registration">
     <section class="form">
       <h3>Регистрация клиента</h3>
-      <form action="javascript:void(0);" method="get">
+      <form action="javascript:void(0);" method="get" novalidate>
 	<fieldset class="clearfix">
 	  <p><input type="text" placeholder="Логин" name="login" required></p>
 	  <p><input type="submit" value="ВОЙТИ" class="button"></p>
@@ -46,7 +46,7 @@
   <div id="create_request">
     <section class="form create-request">
       <h3>Создание новой заявки</h3>
-      <form action="javascript:void(0);" method="get">
+      <form action="javascript:void(0);" method="get" novalidate>
 	<fieldset class="clearfix">
 	  <label>Исполнитель<br>
 	    <select name="performer" required>
@@ -123,6 +123,14 @@
             <label>Готовность<br />
                 <input type="number" name="ready" min="0" max="100" />
             </label>
+            <label>Статус<br />
+                <select name="status">
+		  <option>Открыто</option>
+		  <option>Переоткрыто</option>
+		  <option>Проверка</option>
+		  <option>Закрыто</option>
+		</select>
+            </label>
         </div>
 	  <p><input type="submit" value="ИЗМЕНИТЬ" class="button"></p>
 	</fieldset>
@@ -139,16 +147,36 @@
 	<p>Приветствуем вас, <span class="user"></span> </p>
       </div>
     </header>
+    <section class="search">
+      <form novalidate>
+	<input type="text" placeholder="Введите название заявки" required>
+	<input type="submit" value="Найти">
+      </form>
+    </section>
+    <section class="filter">
+      <form>
+	<label id="filter-customer">Клиенты: <select name="customer"><option>Любой</option></select></label>
+	<label>Статусы: 
+	  <select name="status">
+	    <option>Любой</option>
+	    <option>Открыто</option>
+	    <option>Переоткрыто</option>
+	    <option>Проверка</option>
+	    <option>Закрыто</option>
+	  </select>
+	</label>
+      </form>
+    </section>
     <section class="requests">
       <table>
-	<tr><th temp="customerId">Клиент</th><th temp="performerId">Исполнитель</th><th temp="summary">Название</th><th temp="priority">Приоритет</th><th temp="estimated">Предполагаемое время выполнения</th><th temp="deadline">Deadline</th><th temp="ready">Готовность</th></tr>
+	<tr><th temp="customerId">Клиент</th><th temp="performerId">Исполнитель</th><th temp="summary">Название</th><th temp="priority">Приоритет</th><th temp="estimated">Предполагаемое время выполнения</th><th temp="deadline">Deadline</th><th temp="ready">Готовность</th><th temp="status">Статус</th></tr>
       </table>
     </section>
   </div>
   <div id="performer_registration">
     <section class="form">
       <h3>Регистрация исполнителя</h3>
-      <form action="javascript:void(0);" method="get">
+      <form action="javascript:void(0);" method="get" novalidate>
 	<fieldset class="clearfix">
 	  <p><input type="text" placeholder="Логин" name="login" required></p>
 	  <p><input type="submit" value="ВОЙТИ" class="button"></p>
@@ -159,7 +187,7 @@
   <div id="performer_creation">
     <section class="form">
       <h3>Создание исполнителя</h3>
-      <form action="javascript:void(0);" method="get">
+      <form action="javascript:void(0);" method="get" novalidate>
 	<fieldset class="clearfix">
 	  <p><input type="text" placeholder="Логин" name="login" required></p>
 	  <p><input type="submit" value="СОЗДАТЬ" class="button"></p>
@@ -170,7 +198,7 @@
   <div id="select_performer">
     <section class="form">
       <h3>Выбор исполнителя</h3>
-      <form action="javascript:void(0);" method="get">
+      <form action="javascript:void(0);" method="get" novalidate>
 	<fieldset class="clearfix">
 	  <label>Исполнитель<br>
 	    <select name="priority" required>
@@ -194,7 +222,7 @@
   </header>
   <section class="request-detail">
     <table>
-      <tr><th>Клиент</th><th>Исполнитель</th><th>Название</th><th>Приоритет</th><th>Предполагаемое время выполнения</th><th>Дата открытия</th><th>Deadline</th><th>Готовность</th></tr>
+      <tr><th>Клиент</th><th>Исполнитель</th><th>Название</th><th>Приоритет</th><th>Предполагаемое время выполнения</th><th>Дата открытия</th><th>Deadline</th><th>Готовность</th><th>Статус</th></tr>
     </table>
     <article class="first">
       <h3>Описание:</h3>
