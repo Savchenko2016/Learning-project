@@ -1,0 +1,48 @@
+<div id="list_request">
+  <header class="clearfix">
+    <h3>Список заявок</h3>
+    <% if (f1) { %>
+    <a href="#" class="button" id="create-request">Создать заявку</a>
+    <% } %>
+    <a href="#" class="button" id="back-authorisation">Выйти</a>
+    <% if (f3) { %>
+    <a href="#" class="button" id="create-performer">Создать исполнителя</a>
+    <% } %>
+    <div class="user-info">
+      <p>Приветствуем вас, <span><%-login %></span> </p>
+    </div>
+  </header>
+  <section class="search">
+    <form novalidate>
+      <input type="text" placeholder="Введите название заявки" required>
+      <input type="submit" value="Найти">
+    </form>
+  </section>
+  <section class="filter">
+    <form>
+      <% if (f2) { %>
+      <label>Клиенты: 
+        <select name="customer">
+          <option>Любой</option>
+          <% for (var i = 0; i < customers.length; ++i) { %>
+	  <option><%-customers[i] %></option>
+	  <% } %>
+        </select>
+      </label>
+      <% } %>
+      <label>Статусы: 
+	<select name="status">
+	  <option>Любой</option>
+	  <option>Открыто</option>
+	  <option>Переоткрыто</option>
+	  <option>Проверка</option>
+	  <option>Закрыто</option>
+	</select>
+      </label>
+    </form>
+  </section>
+  <section class="requests">
+    <table>
+    </table>
+  </section>
+</div> 

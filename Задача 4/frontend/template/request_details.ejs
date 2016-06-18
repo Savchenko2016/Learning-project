@@ -1,0 +1,46 @@
+<div id="request_details">
+  <header class="clearfix">
+    <h3>Информация о заявке <span><%-id %></span></h3>
+    
+    <a href="#" class="button" id="list-requests">Список заявок</a>
+    <a href="#" class="button" id="add-comment">Добавить комментарий</a>
+    <% if (f) { %>
+    <a href="#" class="button" id="edit-request">Редактировать заявку</a>
+    <% } %>
+    <div class="user-info">
+      <p>Приветствуем вас, <span class="user"><%-login %><span> </p>
+    </div>
+  </header>
+  <section class="request-detail">
+    <table>
+      <tr><th>Клиент</th><th>Исполнитель</th><th>Название</th><th>Приоритет</th><th>Предполагаемое время выполнения</th><th>Дата открытия</th><th>Deadline</th><th>Готовность</th><th>Статус</th></tr>
+      <tr>
+      <% for(var i = 0; i < table.length; i++) { %>
+      <td>
+	<%-table[i]%>
+      </td>
+      <% } %>
+      </tr>
+    </table>
+    <article class="first">
+      <h3>Описание:</h3>
+      <div class="content" id="description">
+	<%-description %>
+      </div>
+    </article>
+    <article>
+      <div class="content" id='comments'>
+	<% if (items.length === 0) { %>
+	<h3>Комментариев еще нет.</h3>
+	<% } else { %>
+        <h3>Комментарии:</h3>
+	  <% for (var i = 0; i < items.length; i++) { %>
+	  <ul>
+	    <li><%-items[i].date() + ' - ' + items[i].type() + ' [' + items[i].userId() + ']' %></li>
+	    <li><%-items[i].text() %></li>
+	  </ul>
+	  <% } } %>
+      </div>
+    </article>
+  </section>
+</div>
