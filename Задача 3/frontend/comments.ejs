@@ -1,0 +1,7 @@
+<h3>Комментарии:</h3>
+<% for (var i = 0; i < items.length; i++) { %>
+  <ul>
+    <li><%-items[i].date() + ' - ' + items[i].type() + ' [' + items[i].userId() + ']' %></li>
+    <li><%-items[i].text() %></li>
+  </ul>
+<% } %>

@@ -1,0 +1,21 @@
+<div class="table-pager">
+<table>
+  <tr><th temp="customerId">Клиент</th><th temp="performerId">Исполнитель</th><th temp="summary">Название</th><th temp="priority">Приоритет</th><th temp="estimated">Предполагаемое время выполнения</th><th temp="deadline">Deadline</th><th temp="ready">Готовность</th><th temp="status">Статус</th></tr>
+  <% if (items.length === 0) { %>
+  <tr><td colspan="8">Нет заявок</td></tr>
+  <% } else { %>
+  <% for(var i = 0; i < items.length; i++) { %>
+  <tr>
+    <td style="display: none;"><%-items[i].id %></td><td><%-items[i].customerId %></td><td><%-items[i].performerId %></td><td><%-items[i].summary %></td><td><%-items[i].priority %></td><td><%-items[i].estimated %></td><td><%-items[i].deadline %></td><td><%-items[i].ready + '%' %></td><td><%-items[i].status %></td>
+  </tr>
+  <% } %>
+  <% } %>
+</table>
+  <% if (pager)  { %>
+  <ul class="pager">
+  <% for(var i = 1; i <= count; ++i) { %>
+    <li><%-i %></li>
+  <% } %>
+  </ul>
+  <% } %>
+</div>

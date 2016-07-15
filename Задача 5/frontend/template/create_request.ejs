@@ -1,0 +1,67 @@
+<div id="create_request">
+  <section class="form create-request">
+    <h3>Создание новой заявки</h3>
+    <form action="javascript:void(0);" method="get" novalidate>
+      <fieldset class="clearfix">
+	<label>Исполнитель<br>
+	  <select name="performer" required>
+	  <% for (var i = 0; i<performers.length; ++i) { %>
+	    <option value="<%-performers[i].id %>">
+        <%-performers[i].username %>
+	    </option>
+	  <% } %>
+	  </select>
+	</label>
+	<p><input type="text" name="summary" placeholder="Заголовок" required></p>
+	<p>
+	  <textarea name="description" rows="5" required placeholder="Описание"></textarea>
+	</p>
+	<label>Приоритет<br>
+	  <select name="priority" required>
+	    <option>LOW</option>
+	    <option>MEDIUM</option>
+	    <option>HIGH</option>
+	  </select>
+	</label>
+	<label>Приблизительное время выполнения<br>
+	  <input type="text" name="estimated" palceholder="0" required>
+	</label>
+	<label class="date">Deadline<br>
+	  <select class = "days" name="days">
+	  <% for (var key in days) { %>
+	    <option>
+              <%-days[key] %>
+	    </option>
+	  <% } %>
+	  </select>
+	  <select class = "months" name="months">
+	  <% for (var i = 0; i<months.length; ++i) { %>
+	    <option>
+              <%-months[i] %>
+	    </option>
+	  <% } %>
+	  </select>
+	  <select class = "years" name="years">
+	  <% for (var key in years) { %>
+	    <option>
+              <%-years[key] %>
+	    </option>
+	  <% } %>
+	  </select>
+	</label>
+	<div class="clearfix">
+  	  <label class="col">Часы<br>
+             <input type="number" name="hours" min="0" max="23" value="0" required>
+  	  </label>
+  	  <label class="col">Минуты<br>
+  	    <input type="number" name="minutes" min="0" max="59" value="0" required>
+  	  </label>
+  	  <label class="col">Секунды<br>
+  	    <input type="number" name="seconds" min="0" max="59" value="0" required>
+  	  </label>
+        </div>
+	<p><input type="submit" value="СОЗДАТЬ" class="button"></p>
+      </fieldset>
+    </form>
+  </section>
+</div> 

@@ -1,0 +1,53 @@
+<div id="edit_request">
+  <section class="form create-request">
+    <h3>Редактирование заявки</h3>
+    <form action="javascript:void(0);" method="get" novalidate>
+      <fieldset class="clearfix">
+	<% if (f) { %>
+	<div>
+	  <label>Исполнитель<br>
+	    <select name="performer" required>
+	    <% for (var i = 0; i<items.length; ++i) { %>
+	    <option>
+              <%-items[i] %>
+	    </option>
+	    <% } %>
+	    </select>
+	  </label>
+	  <label>Приблизительное время выполнения<br>
+	    <input type="text" name="estimated" placeholder="0" required>
+	  </label>
+	  <label class="date">Deadline<br>
+	    <select class = "days" name="days"></select><select class = "months" name="months"></select><select class = "years" name="years"></select>
+	  </label>
+          <div class="clearfix">
+	    <label class="col">Часы<br>
+	      <input type="number" name="hours" min="0" max="23" value="0" required>
+	    </label>
+	    <label class="col">Минуты<br>
+	      <input type="number" name="minutes" min="0" max="59" value="0" required>
+	    </label>
+	    <label class="col">Секунды<br>
+	      <input type="number" name="seconds" min="0" max="59" value="0" required>
+	    </label>
+          </div>
+        </div>
+        <% } %>
+	<div id="performer-edit">
+          <label>Готовность<br />
+            <input type="number" name="ready" min="0" max="100" />
+          </label>
+          <label>Статус<br />
+            <select name="status">
+	      <option>Открыто</option>
+	      <option>Переоткрыто</option>
+	      <option>Проверка</option>
+	      <option>Закрыто</option>
+	    </select>
+          </label>
+        </div>
+	<p><input type="submit" value="ИЗМЕНИТЬ" class="button"></p>
+      </fieldset>
+    </form>
+  </section>
+</div> 

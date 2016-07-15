@@ -1,0 +1,41 @@
+{
+  "name": "comment",
+  "base": "PersistedModel",
+  "properties": {
+    "userId": {
+      "type": "number",
+      "required": true
+    },
+    "requestId": {
+      "type": "number",
+      "required": true
+    },
+    "text": {
+      "type": "string",
+      "required": true
+    },
+    "type": {
+      "type": "string",
+      "required": true
+    },
+    "date": {
+      "type": "date",
+      "required": true
+    }
+  },
+  "validations": [],
+  "relations": {
+    "users": {
+      "type": "belongsTo",
+      "model": "user",
+      "foreignKey": "userId"
+    },
+    "requests": {
+      "type": "belongsTo",
+      "model": "request",
+      "foreignKey": "requestId"
+    }
+  },
+  "acls": [],
+  "methods": []
+}

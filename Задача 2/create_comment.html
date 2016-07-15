@@ -1,0 +1,28 @@
+<html>
+  <head>
+    <title>Создание комментария</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="css/style.css" media="screen" type="text/css" />
+    <link rel="stylesheet" href="css/typography.css" media="screen" type="text/css" />
+  </head>
+  <body>
+    <section class="form create-request">
+    <h3>Создание комментария</h3>
+    <form action="javascript:void(0);" method="get">
+      <fieldset class="clearfix">
+        <label>Тип комментария<br>
+          <select name="type" required>
+            <option>Комментарий</option>
+            <option>Вопрос</option>
+            <option>Created</option>
+	    <option>Edited</option>
+	    <option>Closed</option>
+          </select>
+        </label>
+        <p><textarea name="text" rows="10" required onBlur="if(this.value == '') this.value = 'Текст комментария'" onFocus="if(this.value == 'Текст комментария') this.value = ''">Текст комментария</textarea></p>
+        <p><input type="submit" value="СОЗДАТЬ" class="button"></p>
+      </fieldset>
+    </form>
+  </section>
+  </body>
+</html>

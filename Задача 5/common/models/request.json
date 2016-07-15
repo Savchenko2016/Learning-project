@@ -1,0 +1,66 @@
+{
+  "name": "request",
+  "base": "PersistedModel",
+  "properties": {
+    "customerId": {
+      "type": "number",
+      "required": true
+    },
+    "performerId": {
+      "type": "number",
+      "required": true
+    },
+    "description": {
+      "type": "string",
+      "required": true
+    },
+    "summary": {
+      "type": "string",
+      "required": true
+    },
+    "priority": {
+      "type": "string",
+      "required": true
+    },
+    "estimated": {
+      "type": "number",
+      "required": true
+    },
+    "created": {
+      "type": "date",
+      "required": true
+    },
+    "deadline": {
+      "type": "date",
+      "required": true
+    },
+    "ready": {
+      "type": "number",
+      "required": true
+    },
+    "status": {
+      "type": "string",
+      "required": true
+    }
+  },
+  "validations": [],
+  "relations": {
+    "users1": {
+      "type": "belongsTo",
+      "model": "user",
+      "foreignKey": "customerId"
+    },
+    "users2": {
+      "type": "belongsTo",
+      "model": "user",
+      "foreignKey": "performerId"
+    },
+    "comments": {
+      "type": "hasMany",
+      "model": "comment",
+      "foreignKey": "requestId"
+    }
+  },
+  "acls": [],
+  "methods": []
+}

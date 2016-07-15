@@ -1,0 +1,13 @@
+{
+  "db": {
+    "name": "db",
+    "connector": "memory"
+  },
+  "mysqlR": {
+  	"name": "mysqlR",
+  	"connector": "mysql",
+  	"host": "localhost",
+  	"database": "request_system",
+  	"username": "root"
+  }
+}
